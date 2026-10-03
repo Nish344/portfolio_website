@@ -1,0 +1,6 @@
+# personal source material, never published
+Resources/
+
+.wrangler/
+node_modules/
+.DS_Store

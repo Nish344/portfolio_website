@@ -1,0 +1,34 @@
+<!doctype html>
+<!-- Render with: google-chrome --headless --screenshot=site/og-image.png --window-size=1200,630 tools/og.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "JetBrains Mono"; src: url("../site/fonts/JetBrainsMono-normal.woff2") format("woff2"); font-weight: 400 700; }
+  @font-face { font-family: "Instrument Serif"; src: url("../site/fonts/InstrumentSerif-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Instrument Serif"; src: url("../site/fonts/InstrumentSerif-italic.woff2") format("woff2"); font-style: italic; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #F2EFE6; color: #111110; font: 22px/1.5 "JetBrains Mono", monospace; box-sizing: border-box; padding: 56px 72px;
+    background-image: linear-gradient(90deg, rgba(17,17,16,.08) 1px, transparent 1px); background-size: 88px 100%;
+    position: relative;
+  }
+  .label { font-size: 16px; letter-spacing: .06em; text-transform: uppercase; color: #55534C; }
+  h1 { margin: 18px 0 0; font: 400 168px/0.86 "Instrument Serif", serif; letter-spacing: -0.03em; }
+  h1 em { font-style: italic; background: #FF5F00; padding: 0 8px 0 4px; }
+  .lede { margin-top: 34px; max-width: 760px; }
+  .term { position: absolute; right: 72px; bottom: 56px; border: 3px solid #111110; box-shadow: 9px 9px 0 #111110; background: #111110; color: #F2EFE6; padding: 18px 24px; font-size: 22px; }
+  .term span { color: #9A978D; }
+  .cur { display: inline-block; width: 13px; height: 26px; background: #FF5F00; vertical-align: -5px; }
+  .ruler { position: absolute; left: 24px; top: 0; bottom: 0; width: 18px; border-left: 1px solid rgba(17,17,16,.35);
+    background: linear-gradient(to bottom, rgba(17,17,16,.35) 1px, transparent 1px) 0 0 / 14px 64px repeat-y, linear-gradient(to bottom, rgba(17,17,16,.15) 1px, transparent 1px) 0 0 / 7px 8px repeat-y; }
+</style>
+</head>
+<body>
+  <div class="ruler"></div>
+  <p class="label">Fig. 00 / subject &middot; AI/ML engineer, Bengaluru</p>
+  <h1>Nishanth<br><em>Antony</em>.</h1>
+  <p class="lede">AI that has to work on Monday.</p>
+  <div class="term"><span>visitor@nishanth:~$</span> sudo hire-me <i class="cur"></i></div>
+</body>
+</html>

@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nishanth Antony — AI/ML engineer, Bengaluru</title>
+<meta name="description" content="AI/ML engineer in Bengaluru. Vision-LLM exam grading at 0.855 MAE, payment-recovery agents, and production FastAPI + React at Kwilo AI. Learns whatever the next problem needs.">
+<meta name="author" content="Nishanth Antony">
+<meta name="theme-color" content="#F2EFE6">
+<meta name="color-scheme" content="light dark">
+<!-- [CONFIRM URL] replace nishanth-antony.pages.dev everywhere once the Cloudflare project exists -->
+<link rel="canonical" href="https://nishanth-antony.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nishanth-antony.pages.dev/">
+<meta property="og:title" content="Nishanth Antony — AI/ML engineer">
+<meta property="og:description" content="Vision-LLM graders, payment-recovery agents, and the backend underneath. A lab notebook with a working terminal.">
+<meta property="og:image" content="https://nishanth-antony.pages.dev/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/JetBrainsMono-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/InstrumentSerif-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/InstrumentSerif-italic.woff2" as="font" type="font/woff2" crossorigin>
+
+<script>
+/* Runs before paint: pick theme (saved > OS), decide whether to show the boot log. */
+(function () {
+  var d = document.documentElement;
+  try {
+    var t = localStorage.getItem('theme');
+    if (!t) t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    d.setAttribute('data-theme', t);
+    if (!sessionStorage.getItem('booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('booting');
+  } catch (e) {}
+  d.classList.add('js');
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Nishanth Antony",
+  "url": "https://nishanth-antony.pages.dev/",
+  "email": "mailto:nishanthantony5@gmail.com",
+  "jobTitle": "AI/ML Engineer",
+  "worksFor": { "@type": "Organization", "name": "Kwilo AI", "url": "https://kwilo.ai" },
+  "alumniOf": { "@type": "CollegeOrUniversity", "name": "Bangalore Institute of Technology" },
+  "address": { "@type": "PostalAddress", "addressLocality": "Bengaluru", "addressRegion": "Karnataka", "addressCountry": "IN" },
+  "knowsAbout": ["Large language models", "Vision LLM evaluation", "LangGraph agents", "Retrieval-augmented generation", "FastAPI", "PostgreSQL", "Application security"],
+  "sameAs": [
+    "https://github.com/Nish344",
+    "https://www.linkedin.com/in/nishanth-antony-b60110289/",
+    "https://leetcode.com/u/Nish345/",
+    "https://tryhackme.com/p/N1sh4nth"
+  ]
+}
+</script>
+
+<style>
+/* =====================================================================
+   0. DESIGN TOKENS — retheme here.
+   Exactly one accent. Orange-on-paper text is 2.65:1 (fails AA), so in
+   the light theme orange is only ever a fill with --accent-ink on top.
+   ===================================================================== */
+:root {
+  --paper: #F2EFE6;
+  --paper-2: #E8E4D8;
+  --ink: #111110;
+  --ink-soft: #55534C;
+  --accent: #FF5F00;
+  --accent-ink: #111110;          /* text on orange, constant in both themes */
+  --term-bg: #111110;
+  --term-fg: #F2EFE6;
+  --term-soft: #9A978D;
+  --hair: color-mix(in srgb, var(--ink) 14%, transparent);
+  --hair-strong: color-mix(in srgb, var(--ink) 32%, transparent);
+
+  --font-mono: "JetBrains Mono", "Mono Fallback", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --font-serif: "Instrument Serif", "Serif Fallback", "Iowan Old Style", Georgia, "Times New Roman", serif;
+
+  /* 4pt spacing scale */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px; --s5: 24px;
+  --s6: 32px; --s7: 48px; --s8: 64px; --s9: 96px; --s10: 128px;
+
+  --content: 1080px;
+  --edge: 48px;                   /* min distance from viewport edge */
+  --gap: 24px;                    /* grid gap; ruler ticks derive from it */
+  --bar-h: 56px;                  /* sticky top bar */
+
+  --border: 2px solid var(--ink);
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-lift: 8px 8px 0 var(--ink);
+  --shadow-sm: 3px 3px 0 var(--ink);
+  --ease: 120ms ease;
+
+  --anno-gap: 36px;
+  --anno-w: min(200px, calc((100vw - var(--content)) / 2 - var(--anno-gap) - 44px));
+}
+[data-theme="dark"] {
+  --paper: #0F0F0E;
+  --paper-2: #181816;
+  --ink: #F2EFE6;
+  --ink-soft: #9A978D;
+  --term-bg: #181816;
+  --term-fg: #F2EFE6;
+  --term-soft: #9A978D;
+  color-scheme: dark;
+}
+@media (max-width: 720px) {
+  :root { --edge: 16px; --gap: 16px; --bar-h: 92px; }
+}
+
+/* =====================================================================
+   1. FONTS (self-hosted, latin subset) + metric-matched fallbacks
+   ===================================================================== */
+@font-face { font-family: "JetBrains Mono"; src: url("fonts/JetBrainsMono-normal.woff2") format("woff2"); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("fonts/InstrumentSerif-normal.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Instrument Serif"; src: url("fonts/InstrumentSerif-italic.woff2") format("woff2"); font-weight: 400; font-style: italic; font-display: swap; }
+/* JetBrains Mono advance = 0.6em, same as DejaVu/Menlo; overrides keep line boxes identical */
+@font-face { font-family: "Mono Fallback"; src: local("DejaVu Sans Mono"), local("Menlo"), local("Consolas"), local("Liberation Mono"), local("Courier New"); ascent-override: 102%; descent-override: 30%; line-gap-override: 0%; }
+/* Instrument Serif is narrow; shrink the fallback so wraps roughly match */
+@font-face { font-family: "Serif Fallback"; src: local("Georgia"), local("Times New Roman"), local("Liberation Serif"), local("DejaVu Serif"); size-adjust: 86%; }
+
+/* =====================================================================
+   2. BASE
+   ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 15px/1.6 var(--font-mono);
+  font-feature-settings: "calt" 1, "liga" 1;
+  font-variant-numeric: tabular-nums;
+  overflow-x: hidden;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+code, kbd { font-family: var(--font-mono); font-size: 0.92em; }
+kbd { border: 1px solid var(--ink); padding: 0 4px; box-shadow: 1px 1px 0 var(--ink); }
+svg { display: block; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+[hidden] { display: none !important; }
+
+/* Focus: 3px orange ring + thin ink halo so it passes 3:1 on paper too */
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; box-shadow: 0 0 0 7px var(--ink); }
+/* Programmatic focus targets (sections, panels after `open`) get no ring */
+[tabindex="-1"]:focus, [tabindex="-1"]:focus-visible { outline: none; box-shadow: none; }
+.panel[tabindex="-1"]:focus { box-shadow: var(--shadow); }
+
+.sr-only { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.skip { position: absolute; left: var(--s4); top: -100px; z-index: 200; background: var(--accent); color: var(--accent-ink); padding: var(--s2) var(--s4); border: var(--border); font-weight: 700; text-decoration: none; }
+.skip:focus { top: var(--s4); }
+
+/* Paper grain: SVG turbulence, ~3.5% */
+html::before {
+  content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+[data-theme="dark"]::before { filter: invert(1); opacity: .038; }
+
+/* Rulers in the page margins: minor tick every 8px, major every 64px */
+body::before, body::after {
+  content: ""; position: fixed; top: 0; bottom: 0; width: 18px; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(var(--hair-strong), var(--hair-strong)) 0 0 / 1px 100% no-repeat,
+    linear-gradient(to bottom, var(--hair-strong) 1px, transparent 1px) 0 0 / 14px 64px repeat-y,
+    linear-gradient(to bottom, var(--hair) 1px, transparent 1px) 0 0 / 7px 8px repeat-y;
+}
+body::before { left: 12px; }
+body::after { right: 12px; transform: scaleX(-1); }
+@media (max-width: 720px) { body::before, body::after { display: none; } }
+
+/* =====================================================================
+   3. LAYOUT PRIMITIVES
+   ===================================================================== */
+.wrap { width: min(var(--content), 100% - 2 * var(--edge)); margin-inline: auto; position: relative; }
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+
+/* Hairline rule with ticks at every column start (period = column + gap) */
+.ruled { position: relative; }
+.ruled::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 7px;
+  border-top: 1px solid var(--ink);
+  background: linear-gradient(90deg, var(--ink) 1px, transparent 1px) 0 0 / calc((100% + var(--gap)) / 12) 100% repeat-x;
+}
+
+.label { font-size: 11px; line-height: 1.4; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.serif { font-family: var(--font-serif); font-weight: 400; }
+
+/* The cursor: solid orange block. Echoed small in headings. */
+.cursor { display: inline-block; width: .6em; height: 1.15em; vertical-align: -0.2em; background: var(--accent); }
+.cursor--sm { width: .16em; height: .62em; margin-left: .12em; vertical-align: .02em; }
+@media (prefers-reduced-motion: no-preference) {
+  .cursor, .term.is-focused .term__cursor { animation: blink 1.1s steps(1) infinite; }
+  .cursor--sm { animation-duration: 2.2s; }
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* =====================================================================
+   4. PANELS — hard border, hard shadow, lab-form title bar
+   ===================================================================== */
+.panel { position: relative; background: var(--paper); border: var(--border); box-shadow: var(--shadow); }
+.panel__bar {
+  display: flex; justify-content: space-between; align-items: center; gap: var(--s3);
+  min-height: 32px; padding: 6px var(--s3); border-bottom: var(--border); background: var(--paper-2);
+  font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+}
+.panel__bar > :first-child { color: var(--ink-soft); }
+.tag { font-weight: 700; white-space: nowrap; }
+.panel--lift { transition: transform var(--ease), box-shadow var(--ease); }
+.panel--lift:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-lift); }
+.panel.is-targeted, .panel.is-targeted:focus { box-shadow: 8px 8px 0 var(--accent); transform: translate(-2px, -2px); }
+
+/* Small square buttons ("chips"): press = shadow collapses */
+.chip {
+  display: inline-flex; align-items: center; gap: var(--s2);
+  min-height: 32px; padding: 4px 10px; background: var(--paper); border: var(--border); box-shadow: var(--shadow-sm);
+  font-size: 13px; line-height: 1.2; white-space: nowrap; text-decoration: none;
+  transition: transform var(--ease), box-shadow var(--ease), background var(--ease);
+}
+.chip:hover { background: var(--paper-2); text-decoration: none; }
+.chip:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.chip__p { color: var(--ink-soft); }
+
+/* =====================================================================
+   5. MARGIN ANNOTATIONS
+   Narrow screens: inline footnote (†). >=1520px: hung in the gutter with
+   a leader line back to the content edge.
+   ===================================================================== */
+.has-anno { position: relative; }
+.anno {
+  display: block; margin-top: var(--s4); padding-top: var(--s2);
+  border-top: 1px dashed var(--hair-strong);
+  font-size: 11px; line-height: 1.55; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft);
+}
+.anno::before { content: "\2020\00a0"; }
+.anno u { text-decoration: underline 2px var(--accent); text-underline-offset: 3px; }
+.panel > .anno { margin: 0; padding: var(--s2) var(--s4) var(--s3); }
+.contact .anno { color: var(--accent-ink); border-top-color: color-mix(in srgb, var(--accent-ink) 40%, transparent); }
+.contact .anno u { text-decoration-color: var(--accent-ink); }
+@media (min-width: 1520px) {
+  .anno, .panel > .anno { position: absolute; top: var(--y, 44px); width: var(--anno-w); margin: 0; padding: 0; border: 0; }
+  .contact .anno { color: var(--ink-soft); }
+  .contact .anno u { text-decoration-color: var(--accent); }
+  .anno--r { left: calc(100% + var(--anno-gap)); }
+  .anno--l { right: calc(100% + var(--anno-gap)); text-align: right; }
+  .anno::before { content: ""; position: absolute; top: .78em; width: calc(var(--anno-gap) - 10px); border-top: 1px solid var(--ink-soft); }
+  .anno::after { content: ""; position: absolute; top: calc(.78em - 2px); width: 5px; height: 5px; border-radius: 50%; background: var(--ink-soft); }
+  .anno--r::before { right: calc(100% + 8px); }
+  .anno--r::after { right: calc(100% + var(--anno-gap) - 4px); }
+  .anno--l::before { left: calc(100% + 8px); }
+  .anno--l::after { left: calc(100% + var(--anno-gap) - 4px); }
+}
+
+/* =====================================================================
+   6. BOOT LOG (first visit per session; pure CSS timing, JS only skips)
+   ===================================================================== */
+.boot { display: none; }
+.booting .boot {
+  display: flex; position: fixed; inset: 0; z-index: 150; background: var(--paper);
+  align-items: flex-end; padding: var(--s7) max(var(--edge), 6vw);
+  animation: boot-out 180ms ease 1.35s forwards;
+}
+.boot pre { margin: 0; font: 400 clamp(10px, 2.4vw, 13px)/1.7 var(--font-mono); white-space: pre; overflow: hidden; }
+.boot__ln { display: block; opacity: 0; animation: boot-in 0s linear forwards; animation-delay: calc(var(--i) * 150ms); }
+.boot__ok { background: var(--accent); color: var(--accent-ink); padding: 0 4px; }
+@keyframes boot-in { to { opacity: 1; } }
+@keyframes boot-out { to { opacity: 0; visibility: hidden; } }
+
+/* =====================================================================
+   7. TOP BAR + NAV
+   ===================================================================== */
+.topbar { position: sticky; top: 0; z-index: 40; background: var(--paper); border-bottom: var(--border); }
+.topbar__in { display: flex; align-items: center; gap: var(--s5); min-height: 54px; }
+.brand { display: flex; align-items: baseline; gap: var(--s2); text-decoration: none; font-weight: 700; font-size: 14px; white-space: nowrap; }
+.brand__mark { font-family: var(--font-serif); font-weight: 400; font-size: 24px; line-height: 1; }
+.brand__vol { font-weight: 400; color: var(--ink-soft); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.topnav { margin-left: auto; }
+.nav { display: flex; gap: 2px; }
+.nav a {
+  display: block; padding: 4px 8px; font-size: 13px; text-decoration: none; border: 2px solid transparent;
+}
+.nav a:hover { border-color: var(--ink); }
+.nav a.is-active { background: var(--accent); color: var(--accent-ink); border-color: var(--ink); }
+.nav__n { font-size: 10px; margin-right: 2px; }
+.topbar__tools { display: flex; align-items: center; gap: var(--s3); }
+.kbd-hint { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+.kbd-hint:hover { color: var(--ink); }
+.theme-switch { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.theme-switch__track { width: 34px; height: 18px; border: var(--border); position: relative; background: var(--paper-2); }
+.theme-switch__knob { position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; background: var(--ink); transition: transform var(--ease); }
+[data-theme="dark"] .theme-switch__knob { transform: translateX(16px); background: var(--accent); }
+@media (max-width: 1180px) { .kbd-hint, .brand__vol { display: none; } }
+@media (max-width: 1000px) { .nav__n { display: none; } .topbar__in { gap: var(--s4); } }
+@media (max-width: 720px) {
+  .topbar__in { flex-wrap: wrap; row-gap: 0; padding-top: 8px; }
+  .topnav { order: 3; width: calc(100% + 2 * var(--edge)); margin: 0 calc(-1 * var(--edge)); padding: 6px var(--edge) 8px; overflow-x: auto; scrollbar-width: none; }
+  .topnav::-webkit-scrollbar { display: none; }
+  .topbar__tools { margin-left: auto; }
+  .brand__vol { display: none; }
+}
+
+/* =====================================================================
+   8. HERO
+   ===================================================================== */
+.hero { padding-block: var(--s8) var(--s8); }
+.hero__grid { position: relative; align-items: start; }
+.hero__grid::before { /* faint 12-col graph paper, hero only */
+  content: ""; position: absolute; inset: -64px 0 -32px; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, var(--hair) 1px, transparent 1px) 0 0 / calc((100% + var(--gap)) / 12) 100% repeat-x;
+  -webkit-mask: linear-gradient(to bottom, transparent, #000 15%, #000 80%, transparent);
+          mask: linear-gradient(to bottom, transparent, #000 15%, #000 80%, transparent);
+}
+.hero__left { grid-column: 1 / span 7; }
+.hero__right { grid-column: 8 / span 5; padding-top: var(--s5); }
+.hero__name {
+  margin-top: var(--s4);
+  font: 400 clamp(60px, 17vw, 160px)/0.88 var(--font-serif);
+  letter-spacing: -0.03em;
+}
+.hero__name > span { display: block; white-space: nowrap; }
+.hero__em { font-style: italic; }
+/* flat band (single colour, not a gradient) sized to the glyphs, not the tall serif content box */
+[data-theme="light"] .hero__em > em { background: linear-gradient(var(--accent), var(--accent)) 0 72% / 100% 74% no-repeat; color: var(--accent-ink); padding: 0 .06em 0 .02em; }
+[data-theme="dark"] .hero__em > em { color: var(--accent); }
+.hero__em > em { font-style: italic; }
+.hero__lede { margin-top: var(--s6); max-width: 52ch; font-size: 16px; line-height: 1.65; }
+.hero__lede strong { font-weight: 700; }
+
+/* Status strip: a lab-form footer row */
+.status {
+  grid-column: 1 / -1; margin-top: var(--s7);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+}
+.status > div { padding: var(--s3) var(--s4) var(--s3) 0; }
+.status > div + div { padding-left: var(--s4); border-left: 1px solid var(--hair-strong); }
+.status dd { font-size: 13px; margin-top: 2px; }
+.status__dot { display: inline-block; width: 8px; height: 8px; background: var(--accent); border: 1px solid var(--ink); margin-right: 6px; vertical-align: 0; }
+
+/* Learning ledger (hero widget): one marker per stack, positioned by month */
+.ledger { margin-top: var(--s6); max-width: 480px; }
+.ledger__body { padding: var(--s3) var(--s4) var(--s4); }
+.ledger__meta { font-size: 11px; color: var(--ink-soft); letter-spacing: .04em; }
+.ledger__track {
+  position: relative; height: 96px; margin: var(--s4) 12px 0;
+  border-bottom: 1px solid var(--ink);
+  background: linear-gradient(90deg, var(--hair-strong) 1px, transparent 1px) 0 100% / calc(100% / 25) 6px repeat-x;
+}
+.ledger__yr { position: absolute; bottom: -20px; transform: translateX(-50%); font-size: 10px; letter-spacing: .06em; color: var(--ink-soft); }
+.ledger__yr::before { content: ""; position: absolute; left: 50%; bottom: 19px; width: 1px; height: 12px; background: var(--ink); }
+.ledger__pt {
+  position: absolute; left: calc(var(--x) * 1%); bottom: calc(10px + var(--row) * 26px);
+  width: 24px; height: 24px; margin-left: -12px; padding: 0; border: 0; background: none; cursor: pointer;
+  display: grid; place-items: center;
+}
+.ledger__pt::before { content: ""; width: 12px; height: 12px; border: 2px solid var(--ink); background: var(--paper); transition: transform var(--ease); }
+.ledger__pt::after { content: ""; position: absolute; left: 50%; top: 24px; width: 1px; height: calc(var(--row) * 26px + 10px); background: var(--hair-strong); }
+.ledger__pt:hover::before { transform: translate(-1px, -1px); box-shadow: 2px 2px 0 var(--ink); }
+.ledger__pt[aria-pressed="true"]::before { background: var(--accent); box-shadow: 2px 2px 0 var(--ink); }
+.ledger__detail { margin-top: 32px; min-height: 96px; border-top: 1px solid var(--hair); padding-top: var(--s3); }
+.ledger__when { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.ledger__what { font-size: 16px; font-weight: 700; margin-top: 2px; }
+.ledger__why { font-size: 13px; line-height: 1.55; margin-top: 2px; color: var(--ink-soft); }
+.ledger__row { display: flex; align-items: center; justify-content: space-between; margin-top: var(--s3); gap: var(--s3); flex-wrap: wrap; }
+.ledger__nav { display: flex; gap: var(--s2); }
+
+/* whoami banner: each filled cell is a space with an orange background, so it aligns in any font */
+.term__art { color: var(--accent); line-height: .9; font-size: min(1em, 3.3vw); margin: 4px 0 var(--s2); white-space: pre; }
+.term__art > div { height: .9em; }
+.term__px { background: var(--accent); }
+
+@media (max-width: 1024px) {
+  .hero__left, .hero__right { grid-column: 1 / -1; }
+  .hero__right { padding-top: 0; }
+}
+@media (max-width: 720px) {
+  .hero { padding-top: var(--s6); }
+  .status { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .status > div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .status > div:nth-child(n+3) { border-top: 1px solid var(--hair-strong); }
+}
+
+/* =====================================================================
+   9. TERMINAL
+   ===================================================================== */
+.term { background: var(--paper); }
+.term__screen {
+  height: 360px; overflow-y: auto; overscroll-behavior: contain;
+  padding: var(--s3) var(--s4); background: var(--term-bg); color: var(--term-fg);
+  font-size: 13px; line-height: 1.6; cursor: text;
+  scrollbar-width: thin; scrollbar-color: var(--term-soft) transparent;
+}
+.term__out { word-break: break-word; }
+.term__block + .term__block { margin-top: var(--s2); }
+.term__ln { min-height: 1.6em; white-space: pre-wrap; }
+.term__ps { color: var(--term-soft); }
+.term__dim { color: var(--term-soft); }
+.term__hi { background: var(--accent); color: var(--accent-ink); padding: 0 3px; }
+.term__link { color: var(--term-fg); text-decoration: underline dotted 1px; text-underline-offset: 3px; cursor: pointer; }
+.term__link:hover { color: var(--accent); text-decoration-style: solid; }
+.term__link:focus-visible { box-shadow: none; outline-offset: 1px; }
+.term__line { display: flex; gap: 1ch; margin-top: var(--s2); }
+.term__prompt { color: var(--term-soft); white-space: nowrap; flex: none; }
+.term__field { position: relative; flex: 1; min-width: 0; overflow: hidden; }
+.term__input, .term__mirror { font: inherit; letter-spacing: 0; line-height: 1.6; white-space: pre; }
+.term__input {
+  position: absolute; inset: 0; width: 100%; padding: 0; margin: 0; border: 0; outline: none; background: transparent;
+  color: transparent; caret-color: transparent;
+}
+.term__input:focus-visible { box-shadow: none; outline: none; }
+.term__line:focus-within { outline: 2px solid var(--accent); outline-offset: 4px; }
+.term__mirror { display: block; pointer-events: none; min-height: 1.6em; }
+.term__cursor { display: inline-block; min-width: 1ch; background: var(--accent); color: var(--accent-ink); }
+.term:not(.is-focused) .term__cursor { background: transparent; color: inherit; box-shadow: inset 0 0 0 1px var(--accent); }
+.term__help { padding: var(--s2) var(--s4) 0; font-size: 11px; color: var(--ink-soft); letter-spacing: .04em; }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); padding: var(--s3) var(--s4) var(--s4); }
+.term__close { display: none; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 2px 6px; border: 2px solid var(--ink); }
+.term__close:hover { background: var(--accent); color: var(--accent-ink); }
+
+/* Docked mode: the same terminal follows you down the page */
+.term.is-docked {
+  --dock-inset: 20px;
+  position: fixed; right: var(--dock-inset); bottom: var(--dock-inset); z-index: 60;
+  width: min(560px, calc(100vw - 2 * var(--dock-inset)));
+}
+.term.is-docked .term__screen { height: min(300px, 40vh); }
+.term.is-docked .term__close { display: inline-block; }
+.term.is-docked .term__help { display: none; }
+@media (max-width: 720px) {
+  .term__screen { height: 300px; }
+  .term__input, .term__mirror, .term__line { font-size: 16px; } /* no iOS zoom on focus */
+  .term.is-docked { --dock-inset: 8px; }
+  .term.is-docked .chips { display: none; }
+}
+.term-fab { position: fixed; right: 20px; bottom: 20px; z-index: 55; }
+
+/* =====================================================================
+   10. SECTIONS
+   ===================================================================== */
+.sec { padding-block: var(--s9); scroll-margin-top: var(--bar-h); }
+.sec-head { padding-top: var(--s6); margin-bottom: var(--s7); align-items: end; }
+.sec-head__idx { grid-column: 1 / span 3; align-self: start; display: flex; flex-direction: column; gap: var(--s2); }
+.sec-head__title { grid-column: 4 / span 6; font: 400 clamp(40px, 6vw, 88px)/0.95 var(--font-serif); letter-spacing: -0.025em; }
+.sec-head__title em { font-style: italic; }
+.sec-head__note { grid-column: 10 / span 3; font-size: 12px; color: var(--ink-soft); text-align: right; }
+.cmdlink { align-self: flex-start; font-size: 12px; text-transform: none; letter-spacing: 0; color: var(--ink); border-bottom: 1px dashed var(--ink); }
+.cmdlink:hover { background: var(--accent); color: var(--accent-ink); border-bottom-color: transparent; }
+@media (max-width: 960px) {
+  .sec-head__idx, .sec-head__title, .sec-head__note { grid-column: 1 / -1; text-align: left; }
+}
+@media (max-width: 720px) { .sec { padding-block: var(--s8); } .sec-head { margin-bottom: var(--s6); } }
+
+/* ---------- Projects ---------- */
+.projects { row-gap: var(--s7); align-items: start; }
+.project { scroll-margin-top: calc(var(--bar-h) + 24px); }
+.project--a { grid-column: span 7; }
+.project--b { grid-column: span 5; }
+.project--c { grid-column: span 6; }
+.project__body { padding: var(--s5); display: flex; flex-direction: column; gap: var(--s4); }
+.project__ctx { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.project__title { font: 400 clamp(30px, 3.2vw, 42px)/1 var(--font-serif); letter-spacing: -0.02em; margin-top: -4px; }
+.project__title em { font-style: italic; }
+.kv { font-size: 14px; line-height: 1.6; }
+.k { display: inline-block; min-width: 10ch; margin-right: 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tags li { font-size: 11px; line-height: 1; padding: 4px 6px; border: 1px solid var(--ink); }
+.metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.metric { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 4px; padding: var(--s3) var(--s3) var(--s3) 0; }
+.metric + .metric { padding-left: var(--s3); border-left: 1px solid var(--hair-strong); }
+.metric dd { font-size: clamp(26px, 2.6vw, 38px); line-height: 1; font-weight: 500; letter-spacing: -0.03em; white-space: nowrap; }
+.metric dt { font-size: 11px; line-height: 1.35; letter-spacing: .04em; color: var(--ink-soft); }
+.metric--hot dd { align-self: flex-start; background: var(--accent); color: var(--accent-ink); padding: 2px 6px; margin-left: -6px; }
+.learned { border-left: 2px solid var(--ink); padding-left: var(--s3); font-size: 14px; line-height: 1.6; }
+.learned .k { display: block; margin-bottom: 2px; }
+.links { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: 13px; }
+.links .ph { color: var(--ink-soft); }
+.diagram summary { cursor: pointer; font-size: 12px; list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+.diagram summary::-webkit-details-marker { display: none; }
+.diagram summary::before { content: "+"; display: inline-grid; place-items: center; width: 16px; height: 16px; border: 1px solid var(--ink); font-size: 12px; line-height: 1; }
+.diagram[open] summary::before { content: "\2212"; }
+.diagram__fig { margin-top: var(--s3); border: 1px solid var(--ink); background: var(--paper-2); overflow-x: auto; }
+.diagram__fig svg { min-width: 560px; width: 100%; height: auto; color: var(--ink); }
+.diagram__fig figcaption { font-size: 11px; color: var(--ink-soft); padding: 6px var(--s3); border-top: 1px solid var(--hair-strong); letter-spacing: .04em; }
+.svg-hot { fill: var(--accent); }
+.svg-hot-t { fill: var(--accent-ink); }
+@media (max-width: 960px) { .project--a, .project--b, .project--c { grid-column: 1 / -1; } }
+@media (max-width: 480px) {
+  .project__body { padding: var(--s4); }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .metric:nth-child(3) { grid-column: 1 / -1; border-left: 0; padding-left: 0; border-top: 1px solid var(--hair-strong); }
+}
+
+/* ---------- Notebook (lab log) ---------- */
+.log { width: 100%; border-collapse: collapse; font-size: 13px; }
+.log caption { text-align: left; }
+.log th { text-align: left; font-weight: 400; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: var(--s2) var(--s4); border-bottom: 1px solid var(--ink); }
+.log td { padding: 10px var(--s4); border-bottom: 1px solid var(--hair); vertical-align: top; }
+.log tr:last-child td { border-bottom: 0; }
+.log tbody tr:hover { background: var(--paper-2); }
+.log__date { white-space: nowrap; color: var(--ink-soft); width: 9ch; }
+.log__entry { font-weight: 500; }
+.log__tag span { display: inline-block; font-size: 10px; letter-spacing: .06em; padding: 1px 5px; border: 1px solid var(--ink); }
+.log__res { color: var(--ink-soft); }
+@media (max-width: 720px) {
+  .log thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .log tr { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--s3); padding: var(--s3) var(--s4); border-bottom: 1px solid var(--hair); }
+  .log td { display: block; padding: 0; border: 0; }
+  .log__date { grid-area: 1 / 1; }
+  .log__tag { grid-area: 1 / 2; text-align: right; }
+  .log__entry { grid-area: 2 / 1 / 3 / -1; }
+  .log__res { grid-area: 3 / 1 / 4 / -1; }
+}
+
+/* ---------- About (README) ---------- */
+.about__doc { grid-column: span 8; }
+.about__side { grid-column: span 4; display: flex; flex-direction: column; gap: var(--s5); }
+.readme { padding: var(--s5) var(--s6) var(--s6); max-width: 72ch; font-size: 15px; line-height: 1.7; }
+.readme h3 { font-size: 15px; font-weight: 700; margin-top: var(--s6); }
+.readme h3:first-child { margin-top: 0; }
+.readme .md { color: var(--ink-soft); font-weight: 400; }
+.readme p { margin-top: var(--s3); }
+.readme ul { margin-top: var(--s3); }
+.readme li { padding-left: 2ch; text-indent: -2ch; }
+.readme li::before { content: "- "; color: var(--ink-soft); }
+.readme .lead { font-family: var(--font-serif); font-size: clamp(24px, 2.4vw, 30px); line-height: 1.2; letter-spacing: -0.01em; margin-top: 0; }
+.readme .lead em { font-style: italic; }
+.frame { aspect-ratio: 4 / 5; display: grid; place-items: center; position: relative; background: var(--paper-2); overflow: hidden; }
+.frame__mono { font: italic 400 clamp(88px, 10vw, 140px)/1 var(--font-serif); letter-spacing: -0.04em; }
+.frame::before, .frame::after { content: ""; position: absolute; inset: 14px; pointer-events: none; }
+.frame::before { /* registration marks in the corners */
+  background:
+    linear-gradient(var(--ink), var(--ink)) 0 0 / 14px 1px no-repeat, linear-gradient(var(--ink), var(--ink)) 0 0 / 1px 14px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 100% 0 / 14px 1px no-repeat, linear-gradient(var(--ink), var(--ink)) 100% 0 / 1px 14px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 0 100% / 14px 1px no-repeat, linear-gradient(var(--ink), var(--ink)) 0 100% / 1px 14px no-repeat,
+    linear-gradient(var(--ink), var(--ink)) 100% 100% / 14px 1px no-repeat, linear-gradient(var(--ink), var(--ink)) 100% 100% / 1px 14px no-repeat;
+}
+.frame::after { /* crosshair */
+  background: linear-gradient(var(--hair-strong), var(--hair-strong)) 50% 0 / 1px 100% no-repeat, linear-gradient(var(--hair-strong), var(--hair-strong)) 0 50% / 100% 1px no-repeat;
+  z-index: 0;
+}
+.frame__mono { position: relative; z-index: 1; background: var(--paper-2); padding: 0 .08em; }
+.frame-cap { font-size: 11px; color: var(--ink-soft); letter-spacing: .04em; padding: var(--s2) var(--s3); border-top: var(--border); }
+.facts { padding: var(--s3) var(--s4); font-size: 13px; }
+.facts div { display: flex; justify-content: space-between; gap: var(--s3); padding: 6px 0; border-bottom: 1px solid var(--hair); }
+.facts div:last-child { border-bottom: 0; }
+.facts dt { color: var(--ink-soft); }
+.facts dd { text-align: right; }
+@media (max-width: 960px) {
+  .about__doc, .about__side { grid-column: 1 / -1; }
+  .about__side { flex-direction: row; flex-wrap: wrap; }
+  .about__side > * { flex: 1 1 240px; }
+}
+@media (max-width: 720px) { .readme { padding: var(--s4); } }
+
+/* ---------- Skills matrix ---------- */
+.matrix { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.matrix th, .matrix td { text-align: left; vertical-align: top; padding: var(--s3) var(--s4); border-bottom: 1px solid var(--hair); }
+.matrix thead th { font-weight: 400; border-bottom: 1px solid var(--ink); }
+.matrix thead th span { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.matrix thead th small { display: block; font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+.matrix tbody th { font-weight: 700; width: 18%; }
+.matrix td + td, .matrix th + td { border-left: 1px solid var(--hair); }
+.matrix li { display: inline; }
+.matrix li:not(:last-child)::after { content: ", "; color: var(--ink-soft); }
+.matrix .none { color: var(--ink-soft); }
+.matrix tr:last-child > * { border-bottom: 0; }
+.matrix col.c-key { width: 18%; }
+@media (max-width: 860px) {
+  .matrix thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .matrix, .matrix tbody, .matrix tr, .matrix th, .matrix td { display: block; width: auto; }
+  .matrix tr { padding: var(--s3) var(--s4); border-bottom: 1px solid var(--hair); }
+  .matrix tbody th, .matrix td { padding: 2px 0; border: 0 !important; }
+  .matrix td::before { content: attr(data-level) ": "; color: var(--ink-soft); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+}
+
+/* ---------- Contact (the one big orange panel) ---------- */
+.contact { background: var(--accent); color: var(--accent-ink); }
+.contact .panel__bar { background: var(--accent); color: var(--accent-ink); border-bottom-color: var(--ink); }
+.contact .panel__bar > :first-child { color: var(--accent-ink); }
+.contact__body { padding: var(--s7) var(--s6); display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); align-items: end; }
+.contact__title { grid-column: 1 / span 7; font: 400 clamp(44px, 6.5vw, 96px)/0.92 var(--font-serif); letter-spacing: -0.03em; }
+.contact__title em { font-style: italic; }
+.contact__list { grid-column: 8 / span 5; font-size: 14px; }
+.contact__list div { display: flex; justify-content: space-between; gap: var(--s3); padding: 7px 0; border-bottom: 1px solid color-mix(in srgb, var(--accent-ink) 30%, transparent); }
+.contact__list dt { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.contact a { color: var(--accent-ink); }
+.contact a:hover { text-decoration-color: var(--accent-ink); }
+.contact :focus-visible { outline-color: var(--accent-ink); box-shadow: none; }
+.copyline { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); margin-top: var(--s5); padding-top: var(--s4); border-top: 2px solid var(--accent-ink); }
+.copyline code { font-size: clamp(13px, 1.6vw, 17px); word-break: break-all; }
+.copyline .chip { background: var(--accent-ink); color: var(--accent); border-color: var(--accent-ink); box-shadow: 3px 3px 0 color-mix(in srgb, var(--accent-ink) 40%, transparent); }
+.copyline .chip:hover { background: var(--accent-ink); color: #F2EFE6; }
+.copy-status { font-size: 12px; min-width: 10ch; }
+@media (max-width: 860px) {
+  .contact__title, .contact__list { grid-column: 1 / -1; }
+  .contact__body { padding: var(--s6) var(--s4); }
+}
+
+/* ---------- Footer ---------- */
+.footer { padding-block: var(--s6) var(--s8); font-size: 12px; color: var(--ink-soft); }
+.footer__grid { padding-top: var(--s5); }
+.footer__col { grid-column: span 4; }
+.footer__col p + p { margin-top: var(--s2); }
+.footer__col--r { text-align: right; }
+.footer strong { color: var(--ink); font-weight: 500; }
+@media (max-width: 860px) { .footer__col { grid-column: 1 / -1; } .footer__col--r { text-align: left; } }
+
+/* =====================================================================
+   11. REDUCED MOTION
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation: none !important; }
+  .panel--lift:hover, .panel.is-targeted { transform: none; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Boot log: shown once per session, skippable by any key/tap. Decorative. -->
+<div class="boot" id="boot" aria-hidden="true">
+<pre><span class="boot__ln" style="--i:0">NA-LAB BIOS v2026.10  (c) nishanth antony</span>
+<span class="boot__ln" style="--i:1">[ 0.000] init paper .............................. <span class="boot__ok">ok</span></span>
+<span class="boot__ln" style="--i:2">[ 0.041] mount /projects ......................... 6 found</span>
+<span class="boot__ln" style="--i:3">[ 0.088] load few_shot_grader.ckpt ............... ok  (MAE 0.855)</span>
+<span class="boot__ln" style="--i:4">[ 0.132] check caffeine .......................... nominal</span>
+<span class="boot__ln" style="--i:5">[ 0.179] calibrate ruler ticks ................... ok</span>
+<span class="boot__ln" style="--i:6">[ 0.226] spawn shell for visitor ................. ok</span>
+<span class="boot__ln" style="--i:7">press any key to skip<span class="cursor"></span></span></pre>
+</div>
+
+<header class="topbar">
+  <div class="wrap topbar__in">
+    <a class="brand" href="#top">
+      <span class="brand__mark">N.A.</span><span>lab notebook</span><span class="brand__vol">vol. 2026</span><span class="sr-only">, Nishanth Antony, back to top</span>
+    </a>
+    <nav class="topnav" aria-label="Sections">
+      <ol class="nav">
+        <li><a href="#work" data-nav><span class="nav__n">01</span>work</a></li>
+        <li><a href="#notebook" data-nav><span class="nav__n">02</span>notebook</a></li>
+        <li><a href="#about" data-nav><span class="nav__n">03</span>about</a></li>
+        <li><a href="#skills" data-nav><span class="nav__n">04</span>skills</a></li>
+        <li><a href="#contact" data-nav><span class="nav__n">05</span>contact</a></li>
+      </ol>
+    </nav>
+    <div class="topbar__tools">
+      <button class="kbd-hint" type="button" data-open-term>press <kbd>/</kbd> for shell</button>
+      <button class="theme-switch" id="theme-switch" type="button" aria-pressed="false">
+        <span class="theme-switch__track" aria-hidden="true"><span class="theme-switch__knob"></span></span><span>dark</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- =========================== HERO =========================== -->
+<section class="hero" id="top" aria-labelledby="hero-name" tabindex="-1">
+  <div class="wrap grid hero__grid">
+    <div class="hero__left">
+      <div class="has-anno">
+        <p class="label">Fig. 00 / subject &nbsp;·&nbsp; AI/ML engineer, Bengaluru</p>
+        <h1 class="hero__name" id="hero-name">
+          <span>Nishanth</span>
+          <span class="hero__em"><em>Antony</em>.</span>
+        </h1>
+        <aside role="note" class="anno anno--l" style="--y: 56px">also answers to Nish344, Nish345 and N1sh4nth. handle consistency: <u>pending</u> -></aside>
+      </div>
+
+      <p class="hero__lede">
+        I build AI that has to work on Monday: vision-LLM graders that land within one mark of the teacher,
+        agents that chase failed payments without spamming anyone, and the unglamorous backend underneath.
+        <strong>Unfamiliar stack? I learn it on the way.</strong>
+      </p>
+
+      <section class="panel ledger has-anno" aria-labelledby="ledger-title">
+        <div class="panel__bar"><span id="ledger-title">Fig. 00b / learning ledger</span><span class="tag">[SINCE 2024]</span></div>
+        <div class="ledger__body">
+          <p class="ledger__meta">every stack I picked up because something had to ship. 16 in two years, about one every six weeks.</p>
+          <div class="ledger__track" id="ledger-track" role="group" aria-label="Timeline, October 2024 to October 2026. Arrow keys move between entries.">
+            <span class="ledger__yr" style="left: 14%" aria-hidden="true">2025</span>
+            <span class="ledger__yr" style="left: 62%" aria-hidden="true">2026</span>
+          </div>
+          <div class="ledger__detail" id="ledger-detail" aria-live="polite">
+            <p class="ledger__when">2026-10 &middot; 16 / 16</p>
+            <p class="ledger__what">Postgres row-level security</p>
+            <p class="ledger__why">because one school's fees are not another school's business. Kwilo admissions and fees.</p>
+          </div>
+          <div class="ledger__row">
+            <span id="ledger-go"><button class="chip" type="button" data-cmd="open kwilo"><span class="chip__p">$</span>open kwilo</button></span>
+            <span class="ledger__nav">
+              <button class="chip" type="button" id="ledger-prev" aria-label="Previous entry"><span aria-hidden="true">&lt;</span></button>
+              <button class="chip" type="button" id="ledger-next" aria-label="Next entry"><span aria-hidden="true">&gt;</span></button>
+            </span>
+          </div>
+        </div>
+        <aside role="note" class="anno anno--l" style="--y: 40px">no tutorials were completed in the making of this chart. only <u>deadlines</u> -></aside>
+      </section>
+    </div>
+
+    <div class="hero__right has-anno">
+      <div class="term-slot" id="term-slot">
+        <section class="panel term" id="term" aria-labelledby="term-title">
+          <div class="panel__bar">
+            <span id="term-title">Fig. 01 / shell</span>
+            <span><span class="tag">[LIVE]</span> <button class="term__close" type="button" id="term-close" aria-label="Close docked terminal">esc &times;</button></span>
+          </div>
+          <div class="term__screen" id="term-screen">
+            <div class="term__out" id="term-out" role="log" aria-live="polite" aria-label="Terminal output">
+              <div class="term__block">
+                <div class="term__ln"><span class="term__dim">nishanth-lab shell 1.0. type </span><button type="button" class="term__link" data-cmd="help">help</button><span class="term__dim">, or tap a command.</span></div>
+                <div class="term__ln"><span class="term__dim">try: </span><button type="button" class="term__link" data-cmd="ls projects">ls projects</button>  <button type="button" class="term__link" data-cmd="cat about.md">cat about.md</button>  <button type="button" class="term__link" data-cmd="sudo hire-me">sudo hire-me</button></div>
+              </div>
+              <noscript><div class="term__ln">the shell needs javascript. everything below works without it.</div></noscript>
+            </div>
+            <form class="term__line" id="term-form" autocomplete="off">
+              <label class="term__prompt" for="term-input">visitor@nishanth:~$</label>
+              <div class="term__field">
+                <span class="term__mirror" id="term-mirror" aria-hidden="true"><span class="term__cursor"> </span></span>
+                <input class="term__input" id="term-input" type="text" name="cmd" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" aria-describedby="term-help">
+              </div>
+              <button type="submit" hidden>run</button>
+            </form>
+          </div>
+          <p class="term__help" id="term-help">tab completes &middot; &uarr;&darr; history &middot; esc leaves</p>
+          <div class="chips" role="group" aria-label="Quick commands">
+            <button class="chip" type="button" data-cmd="ls projects"><span class="chip__p">$</span>ls projects</button>
+            <button class="chip" type="button" data-cmd="cat about.md"><span class="chip__p">$</span>cat about.md</button>
+            <button class="chip" type="button" data-cmd="cat resume"><span class="chip__p">$</span>cat resume</button>
+            <button class="chip" type="button" data-cmd="contact"><span class="chip__p">$</span>contact</button>
+          </div>
+        </section>
+      </div>
+      <aside role="note" class="anno anno--r" style="--y: 96px">&lt;- it actually executes. try <u>sudo hire-me</u>, or press / from anywhere on the page</aside>
+    </div>
+
+    <dl class="status">
+      <div><dt class="label">location</dt><dd>Bengaluru, IN &middot; UTC+5:30</dd></div>
+      <div><dt class="label">availability</dt><dd><span class="status__dot" aria-hidden="true"></span>[OPEN TO: AI/ML ROLES, 2027]</dd></div>
+      <div><dt class="label">current focus</dt><dd>Kwilo AI &middot; Hindi speech emotion</dd></div>
+      <div><dt class="label">last updated</dt><dd><time datetime="2026-10-03">2026-10-03</time></dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- =========================== PROJECTS =========================== -->
+<section class="sec" id="work" aria-labelledby="work-title" tabindex="-1">
+  <div class="wrap">
+    <header class="sec-head grid ruled">
+      <div class="sec-head__idx label"><span>&sect;01 / work</span><button class="cmdlink" type="button" data-cmd="ls projects">$ ls projects</button></div>
+      <h2 class="sec-head__title" id="work-title">Selected <em>work</em><span class="cursor cursor--sm" aria-hidden="true"></span></h2>
+      <p class="sec-head__note">6 entries. each states the problem, the approach, the result, and what it cost me to learn.</p>
+    </header>
+
+    <div class="grid projects">
+
+      <!-- FIG 02 -->
+      <article class="panel panel--lift project project--a" id="p-grader" data-slug="grader" data-status="SHIPPED" aria-labelledby="p-grader-t">
+        <div class="panel__bar"><span>Fig. 02 / project / 2026</span><span class="tag">[SHIPPED]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Kwilo AI &middot; production research</p>
+          <h3 class="project__title" id="p-grader-t">Vision-LLM <em>exam grader</em></h3>
+          <p class="kv"><span class="k">problem</span>Marking handwritten university scripts eats teachers' evenings, and a model that is two marks off per subpart is worse than no model.</p>
+          <p class="kv"><span class="k">approach</span>Scanned PDF to page images, pages mapped to each subpart, then a vision LLM reads the marking scheme plus a few teacher-marked exemplars. Benchmarked GPT-5.4 Mini, Gemini 3 Flash and 3.1 Pro over 4 subjects and 11 test cells.</p>
+          <ul class="tags"><li>python</li><li>azure openai</li><li>vertex ai</li><li>pymupdf</li><li>uv</li><li>matplotlib</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>pooled MAE, marks per subpart (few-shot subparts)</dt><dd>0.855</dd></div>
+            <div class="metric"><dt>error vs zero-shot, GPT (1.259 to 0.910)</dt><dd>&minus;28%</dd></div>
+            <div class="metric"><dt>subparts within &plusmn;1 mark of the teacher</dt><dd>81.7%</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>Exemplars beat model size: few-shot Flash (0.890) beat zero-shot Pro (1.195). And a harness that writes run manifests is worth more than any single prompt tweak, because it turns "feels better" into a number.</div>
+          <details class="diagram">
+            <summary>show the pipeline</summary>
+            <figure class="diagram__fig">
+              <svg viewBox="0 0 640 196" role="img" aria-labelledby="d1t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
+                <title id="d1t">Pipeline: scanned PDF, page images, subpart page map, prompt builder, vision LLM, marks with evidence, metrics against held-out teacher marks</title>
+                <defs><marker id="ah1" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
+                <g>
+                  <rect x="10" y="18" width="110" height="46"/><rect x="170" y="18" width="110" height="46"/><rect x="330" y="18" width="120" height="46"/><rect x="500" y="18" width="130" height="46"/>
+                  <rect x="500" y="124" width="130" height="50" class="svg-hot" stroke="currentColor"/>
+                  <rect x="330" y="124" width="120" height="50"/><rect x="170" y="124" width="110" height="50"/><rect x="10" y="124" width="110" height="50" stroke-dasharray="4 3"/>
+                  <path d="M120 41H168M280 41H328M450 41H498M565 64V122M500 149H452M330 149H282M120 149H168" marker-end="url(#ah1)"/>
+                </g>
+                <g fill="currentColor" stroke="none">
+                  <text x="22" y="38">scanned PDF</text><text x="22" y="54" opacity=".7">answer script</text>
+                  <text x="182" y="38">page images</text><text x="182" y="54" opacity=".7">rendered</text>
+                  <text x="342" y="38">subpart map</text><text x="342" y="54" opacity=".7">2a -&gt; pp. 2-4</text>
+                  <text x="512" y="38">prompt</text><text x="512" y="54" opacity=".7">rubric + exemplars</text>
+                  <text x="512" y="145" class="svg-hot-t">vision LLM</text><text x="512" y="161" class="svg-hot-t">gpt / gemini</text>
+                  <text x="342" y="145">marks + evidence</text><text x="342" y="161" opacity=".7">JSON per subpart</text>
+                  <text x="182" y="145">metrics</text><text x="182" y="161" opacity=".7">MAE, &#177;1, QWK</text>
+                  <text x="22" y="145">teacher marks</text><text x="22" y="161" opacity=".7">ground truth</text>
+                  <text x="10" y="192" opacity=".7">dashed: never shown to the model, used only for scoring</text>
+                </g>
+              </svg>
+              <figcaption>Fig. 02a. One subpart per call in the subparts pipeline; that variant had zero script failures.</figcaption>
+            </figure>
+          </details>
+          <ul class="links"><li><span class="ph">repo: private (Kwilo)</span></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
+          <aside role="note" class="anno anno--l" style="--y: 300px">MAE is in marks, per subpart. 0.855 = usually off by <u>less than one mark</u> -></aside>
+        </div>
+      </article>
+
+      <!-- FIG 03 -->
+      <article class="panel panel--lift project project--b" id="p-payrecover" data-slug="payrecover" data-status="SHIPPED" aria-labelledby="p-payrecover-t">
+        <div class="panel__bar"><span>Fig. 03 / project / 2026</span><span class="tag">[SHIPPED]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Razorpay AI Buildathon 2026 &middot; track 03</p>
+          <h3 class="project__title" id="p-payrecover-t">PayRecover</h3>
+          <p class="kv"><span class="k">problem</span>A failed UPI or card payment can't be silently re-charged. Merchants either spam the customer or lose the sale.</p>
+          <p class="kv"><span class="k">approach</span>Rules diagnose the failure; Gemini only sees the ambiguous ones. Every action (wait, link, remind, escalate, stop) passes a policy gate with caps and a kill switch, and lands in an append-only audit log.</p>
+          <ul class="tags"><li>python</li><li>razorpay api</li><li>gemini</li><li>sqlite</li><li>pytest</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>of failed revenue recovered (INR 44,205 of 141,353)</dt><dd>31.3%</dd></div>
+            <div class="metric"><dt>of recoverable customers captured</dt><dd>76.1%</dd></div>
+            <div class="metric"><dt>seeded failure cases, one dry run</dt><dd>80</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>The model call is the easy 10%. The agent is the policy around it: typed timeouts, writes that can't double-fire, and a stop that stays stopped after you flip the switch back.</div>
+          <details class="diagram">
+            <summary>show the loop</summary>
+            <figure class="diagram__fig">
+              <svg viewBox="0 0 640 190" role="img" aria-labelledby="d2t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
+                <title id="d2t">Loop: failed payment, diagnose, policy gate, act, all steps written to an append-only audit log; act loops back to diagnose on the next tick</title>
+                <defs><marker id="ah2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
+                <rect x="10" y="44" width="120" height="50"/><rect x="170" y="44" width="130" height="50"/>
+                <rect x="340" y="44" width="130" height="50" class="svg-hot" stroke="currentColor"/><rect x="510" y="44" width="120" height="50"/>
+                <rect x="170" y="134" width="460" height="40" stroke-dasharray="4 3"/>
+                <path d="M130 69H168M300 69H338M470 69H508" marker-end="url(#ah2)"/>
+                <path d="M570 44V20H235V42" marker-end="url(#ah2)"/>
+                <path d="M235 94V132M405 94V132M570 94V132" marker-end="url(#ah2)" opacity=".6"/>
+                <g fill="currentColor" stroke="none">
+                  <text x="402" y="14" text-anchor="middle" opacity=".7">next tick</text>
+                  <text x="22" y="65">failed payment</text><text x="22" y="81" opacity=".7">razorpay</text>
+                  <text x="182" y="65">diagnose</text><text x="182" y="81" opacity=".7">rules, then LLM</text>
+                  <text x="352" y="65" class="svg-hot-t">policy gate</text><text x="352" y="81" class="svg-hot-t">caps, kill switch</text>
+                  <text x="522" y="65">act</text><text x="522" y="81" opacity=".7">link / remind / stop</text>
+                  <text x="400" y="158" text-anchor="middle">audit log: append-only, one corr id per case</text>
+                </g>
+              </svg>
+              <figcaption>Fig. 03a. The LLM sits inside "diagnose". It never gets to skip the gate.</figcaption>
+            </figure>
+          </details>
+          <ul class="links"><li><a href="https://github.com/Nish344/payrecover-agent" target="_blank" rel="noopener">repo -></a></li><li><a href="#">[DEMO VIDEO LINK]</a></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 250px">the headline number is <u>rules-only</u>. the LLM gets the ambiguous cases, and the gate gets the LLM</aside>
+        </div>
+      </article>
+
+      <!-- FIG 04 -->
+      <article class="panel panel--lift project project--b" id="p-dataverse" data-slug="dataverse" data-status="RUNNING" aria-labelledby="p-dataverse-t">
+        <div class="panel__bar"><span>Fig. 04 / experiment / 2026</span><span class="tag">[RUNNING]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">DataVerse competition &middot; deadline 12 Oct 2026</p>
+          <h3 class="project__title" id="p-dataverse-t">Hindi speech <em>emotion</em></h3>
+          <p class="kv"><span class="k">problem</span>Tell angry, happy, neutral and sad apart from ~3-second Hindi clips, with 826 labelled examples and a 209-clip public leaderboard worth about &plusmn;3 points of noise.</p>
+          <p class="kv"><span class="k">approach</span>Frozen Whisper-large and w2v-BERT 2.0 layers as features, linear heads, near-duplicate-grouped CV, speed augmentation with TTA, and a bagged greedy ensemble.</p>
+          <ul class="tags"><li>pytorch</li><li>transformers</li><li>scikit-learn</li><li>kaggle T4</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>3-seed out-of-fold accuracy (ver8)</dt><dd>0.935</dd></div>
+            <div class="metric"><dt>public leaderboard</dt><dd>0.931</dd></div>
+            <div class="metric"><dt>training clips</dt><dd>826</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>The public leaderboard could not see my last three versions; every changed label sat in the private split. Decide on cross-validation, not on the scoreboard. Also: fine-tuning Whisper-large lost to a frozen probe.</div>
+          <ul class="links"><li><a href="#">[REPO LINK, if public]</a></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
+          <aside role="note" class="anno anno--l" style="--y: 220px">footnote 2: it wasn't the learning rate. it was 7 test clips byte-identical to train -></aside>
+        </div>
+      </article>
+
+      <!-- FIG 05 -->
+      <article class="panel panel--lift project project--a" id="p-kwilo" data-slug="kwilo" data-status="IN PROD" aria-labelledby="p-kwilo-t">
+        <div class="panel__bar"><span>Fig. 05 / project / 2026</span><span class="tag">[IN PROD]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Kwilo AI &middot; Apr&ndash;May, Jul 2026&ndash;now</p>
+          <h3 class="project__title" id="p-kwilo-t">Shipping on an <em>AI learning platform</em></h3>
+          <p class="kv"><span class="k">problem</span>Schools run exams, fees and admissions on this product, so a bug costs real money or leaks a real parent's phone number.</p>
+          <p class="kv"><span class="k">approach</span>Answer sheets auto-matched to students (filename first, then header OCR, never blocking the upload). A public blog stack end to end. Fee receipts with race-safe installment settlement. Admissions with a primary guardian and a one-page A4 form.</p>
+          <ul class="tags"><li>fastapi</li><li>sqlalchemy async</li><li>postgres + RLS</li><li>alembic</li><li>react 19</li><li>typescript</li><li>tanstack query</li><li>gemini</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>uploads blocked when OCR can't read a sheet</dt><dd>0</dd></div>
+            <div class="metric"><dt>product areas: exams, content, blog, fees, admissions</dt><dd>5</dd></div>
+            <div class="metric"><dt>guardians per admission, one becomes the parent login</dt><dd>2</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>A self-reported phone number is not proof of identity, so admitting a student now asks staff before linking a parent account. And lock the row before two payments settle the same installment milliseconds apart.</div>
+          <ul class="links"><li><a href="https://kwilo.ai" target="_blank" rel="noopener">kwilo.ai -></a></li><li><span class="ph">code: private</span></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 230px">every change here shipped with tests. the AI reviewer still found things. <u>humbling</u></aside>
+        </div>
+      </article>
+
+      <!-- FIG 06 -->
+      <article class="panel panel--lift project project--c" id="p-veris" data-slug="veris" data-status="HACKATHON" aria-labelledby="p-veris-t">
+        <div class="panel__bar"><span>Fig. 06 / project / 2025</span><span class="tag">[HACKATHON]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Recurzive V2 &middot; Lazy Monks</p>
+          <h3 class="project__title" id="p-veris-t">Veris <em>truth engine</em></h3>
+          <p class="kv"><span class="k">problem</span>Claims spread faster than anyone can check who started them or who is amplifying them.</p>
+          <p class="kv"><span class="k">approach</span>A LangGraph state machine: a collector picks a tool and gathers evidence, a verifier scores each item, a graph node maps authors and mentions, and a refiner decides whether to dig deeper or stop.</p>
+          <ul class="tags"><li>python</li><li>langgraph</li><li>pydantic</li><li>fastapi</li><li>next.js</li></ul>
+          <dl class="metrics">
+            <div class="metric"><dt>graph nodes in the loop</dt><dd>5</dd></div>
+            <div class="metric metric--hot"><dt>trust score per evidence item</dt><dd>0&ndash;1</dd></div>
+            <div class="metric"><dt>apps: agent API + Next.js UI</dt><dd>2</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>An agent loop needs an explicit stopping rule and a typed shared state before it needs a better model. Pydantic on every edge is what kept the demo alive.</div>
+          <details class="diagram">
+            <summary>show the graph</summary>
+            <figure class="diagram__fig">
+              <svg viewBox="0 0 640 180" role="img" aria-labelledby="d3t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
+                <title id="d3t">Graph: query to collector, verifier, graph builder, refiner; refiner loops back to collector with a new query or ends at the reporter</title>
+                <defs><marker id="ah3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
+                <rect x="10" y="44" width="80" height="46"/><rect x="125" y="44" width="105" height="46"/><rect x="265" y="44" width="105" height="46"/>
+                <rect x="405" y="44" width="100" height="46"/><rect x="540" y="44" width="90" height="46" class="svg-hot" stroke="currentColor"/>
+                <rect x="540" y="124" width="90" height="40"/>
+                <path d="M90 67H123M230 67H263M370 67H403M505 67H538M585 90V122" marker-end="url(#ah3)"/>
+                <path d="M585 44V20H178V42" marker-end="url(#ah3)"/>
+                <g fill="currentColor" stroke="none">
+                  <text x="380" y="14" text-anchor="middle" opacity=".7">next_query</text>
+                  <text x="22" y="72">query</text>
+                  <text x="137" y="63">collector</text><text x="137" y="79" opacity=".7">picks a tool</text>
+                  <text x="277" y="63">verifier</text><text x="277" y="79" opacity=".7">trust 0-1</text>
+                  <text x="417" y="63">graph</text><text x="417" y="79" opacity=".7">who said it</text>
+                  <text x="552" y="63" class="svg-hot-t">refiner</text><text x="552" y="79" class="svg-hot-t">dig / stop</text>
+                  <text x="552" y="148">reporter</text><text x="600" y="110" opacity=".7">done</text>
+                </g>
+              </svg>
+              <figcaption>Fig. 06a. The refiner is the only node allowed to end the loop.</figcaption>
+            </figure>
+          </details>
+          <ul class="links"><li><a href="https://github.com/nikhil-r0/veris-ecosystem" target="_blank" rel="noopener">repo -></a></li><li><a href="#">[DEMO VIDEO LINK]</a></li></ul>
+          <aside role="note" class="anno anno--l" style="--y: 230px">TODO: stop over-engineering. (did not, in fact, stop) -></aside>
+        </div>
+      </article>
+
+      <!-- FIG 07 -->
+      <article class="panel panel--lift project project--c" id="p-fediot" data-slug="fediot" data-status="RESEARCH" aria-labelledby="p-fediot-t">
+        <div class="panel__bar"><span>Fig. 07 / research / 2026</span><span class="tag">[RESEARCH]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Coursework-turned-obsession &middot; IoT security</p>
+          <h3 class="project__title" id="p-fediot-t">Federated IoT <em>anomaly detector</em></h3>
+          <p class="kv"><span class="k">problem</span>IoT networks need intrusion detection, but shipping raw traffic from every camera and sensor to one server is a privacy and bandwidth problem.</p>
+          <p class="kv"><span class="k">approach</span>Dockerised federated clients for cameras, sensors and controllers; RFRE preprocessing on IP and port features; FedAvg vs FedProx aggregation benchmarked for stability against spoofing and DDoS.</p>
+          <ul class="tags"><li>python</li><li>pytorch</li><li>docker</li><li>fedprox</li><li>scikit-learn</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>aggregated AUC with FedProx</dt><dd>0.98</dd></div>
+            <div class="metric"><dt>device classes simulated</dt><dd>3</dd></div>
+            <div class="metric"><dt>raw packets leaving a client</dt><dd>0</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>Most of what I called "model instability" was a data-partitioning bug. Check the shards before you tune the optimizer.</div>
+          <ul class="links"><li><a href="#">[REPO LINK]</a></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 230px">0.98 arrived after <u>fixing a bug</u>, not after tuning. it usually does</aside>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- =========================== NOTEBOOK =========================== -->
+<section class="sec" id="notebook" aria-labelledby="notebook-title" tabindex="-1">
+  <div class="wrap">
+    <header class="sec-head grid ruled">
+      <div class="sec-head__idx label"><span>&sect;02 / notebook</span><button class="cmdlink" type="button" data-cmd="cd notebook">$ tail notebook.log</button></div>
+      <h2 class="sec-head__title" id="notebook-title">Lab <em>log</em><span class="cursor cursor--sm" aria-hidden="true"></span></h2>
+      <p class="sec-head__note">smaller experiments, hackathons and write-ups. including the ones that didn't work.</p>
+    </header>
+
+    <div class="panel has-anno">
+      <div class="panel__bar"><span>Fig. 08 / notebook.log</span><span class="tag">[APPEND-ONLY]</span></div>
+      <table class="log">
+        <caption class="sr-only">Lab log of experiments and builds, newest first</caption>
+        <thead><tr><th scope="col">date</th><th scope="col">entry</th><th scope="col">tag</th><th scope="col">result</th></tr></thead>
+        <tbody>
+          <tr><td class="log__date">2026-10</td><td class="log__entry">w2v-BERT 2.0 vs Whisper-large encoders</td><td class="log__tag"><span>ML</span></td><td class="log__res">OOF 0.9346, best so far. public LB didn't move; the changes landed in the private split.</td></tr>
+          <tr><td class="log__date">2026-09</td><td class="log__entry">Fine-tuning Whisper-large on 826 clips</td><td class="log__tag"><span>ML</span></td><td class="log__res">lost to a frozen probe, 0.904 vs 0.925. overfits by epoch 5.</td></tr>
+          <tr><td class="log__date">2026-09</td><td class="log__entry">Face-tracking water gun</td><td class="log__tag"><span>IOT</span></td><td class="log__res">MediaPipe face centre to pan/tilt angles to two ESP32 servos. shoot is still a stub.</td></tr>
+          <tr><td class="log__date">2026-07</td><td class="log__entry">AssetFlow, 8-hour hackathon</td><td class="log__tag"><span>HACK</span></td><td class="log__res">owned the asset track: registry, allocation state machine, transfers, overdue flagger.</td></tr>
+          <tr><td class="log__date">2026-05</td><td class="log__entry">Gemini 3.1 Pro vs 3 Flash, zero-shot grading</td><td class="log__tag"><span>EVAL</span></td><td class="log__res">Flash wins File Structures by 0.42 MAE, loses Math by 0.54. no free lunch.</td></tr>
+          <tr><td class="log__date">2026-05</td><td class="log__entry">Sarvam document OCR as a grading front-end</td><td class="log__tag"><span>EVAL</span></td><td class="log__res">benchmarked, then removed. documented why so nobody re-tries it blind.</td></tr>
+          <tr><td class="log__date">2026-04</td><td class="log__entry">Kannada name generator, char-level GRU</td><td class="log__tag"><span>ML</span></td><td class="log__res">loss 2.08 to 1.41 over 10k epochs. some names are real, most are merely plausible.</td></tr>
+          <tr><td class="log__date">2025-12</td><td class="log__entry">OWASP Top 10 lab series</td><td class="log__tag"><span>SEC</span></td><td class="log__res">17/17 PortSwigger labs written up. the README updates itself via Actions.</td></tr>
+          <tr><td class="log__date">2025-11</td><td class="log__entry">DFA-based intrusion detection, from scratch</td><td class="log__tag"><span>SEC</span></td><td class="log__res">Snort-style rules compiled to a DFA plus PCRE, TCP reassembly, live dashboard.</td></tr>
+          <tr><td class="log__date">2025-11</td><td class="log__entry">Zero-knowledge medical records vault</td><td class="log__tag"><span>SEC</span></td><td class="log__res">AES-256-GCM with RSA-OAEP key wrap in the browser. the server only ever sees ciphertext.</td></tr>
+          <tr><td class="log__date">2025-09</td><td class="log__entry">Samudra Prahari, Smart India Hackathon</td><td class="log__tag"><span>HACK</span></td><td class="log__res">offline BLE-mesh hazard reports with image verification before broadcast.</td></tr>
+          <tr><td class="log__date">2025-08</td><td class="log__entry">REINFOSEC CTF sprint</td><td class="log__tag"><span>SEC</span></td><td class="log__res">100+ challenges in 8 weeks. TryHackMe top 2%.</td></tr>
+          <tr><td class="log__date">2025-05</td><td class="log__entry">Green Quest, Social Hackathon</td><td class="log__tag"><span>HACK</span></td><td class="log__res">adopt a plant on a map, AI-verified care quests, and a plant you can chat with.</td></tr>
+          <tr><td class="log__date">2024-10</td><td class="log__entry">Green Terrace, BuzzOnEarth @ IIT Kanpur</td><td class="log__tag"><span>HACK</span></td><td class="log__res">3rd place. first podium, first all-nighter that paid off.</td></tr>
+        </tbody>
+      </table>
+      <aside role="note" class="anno anno--r" style="--y: 120px">two rows here are things that <u>didn't work</u>. those taught me the most</aside>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== ABOUT =========================== -->
+<section class="sec" id="about" aria-labelledby="about-title" tabindex="-1">
+  <div class="wrap">
+    <header class="sec-head grid ruled">
+      <div class="sec-head__idx label"><span>&sect;03 / about</span><button class="cmdlink" type="button" data-cmd="cat about.md">$ cat about.md</button></div>
+      <h2 class="sec-head__title" id="about-title">About<span class="cursor cursor--sm" aria-hidden="true"></span></h2>
+      <p class="sec-head__note">the readable version of the resume.</p>
+    </header>
+
+    <div class="grid">
+      <article class="panel about__doc has-anno" aria-labelledby="about-title">
+        <div class="panel__bar"><span>about.md &middot; utf-8 &middot; lf</span><span class="tag">[README]</span></div>
+        <div class="readme">
+          <p class="lead">I'm Nishanth. I build LLM systems that have to be <em>right</em>, then the boring code that keeps them right.</p>
+          <p>Final-year computer science at Bangalore Institute of Technology (IoT, cybersecurity and blockchain track, CGPA 8.50). AI/ML intern at Kwilo AI since April 2026, with a two-month break in the middle, working on answer-script grading and the product around it.</p>
+
+          <h3><span class="md">## </span>how I work</h3>
+          <p>I don't pick a lane. I pick a problem and learn whatever lane it lives in. In two years that has meant:</p>
+          <ul>
+            <li>100+ CTFs to learn how web apps break (REINFOSEC, 2025)</li>
+            <li>Spring Boot to learn how they're built (Goloka IT, 2025&ndash;26)</li>
+            <li>LangGraph, to make an agent investigate instead of autocomplete</li>
+            <li>vision LLMs and an eval harness, to grade handwriting against teachers</li>
+            <li>Soroban, to store a notepad on the Stellar chain, mostly to see if I could</li>
+            <li>servo trigonometry, to aim a water gun at faces (it misses less now)</li>
+            <li>Postgres row-level security, because one school's fees are not another school's business</li>
+          </ul>
+
+          <h3><span class="md">## </span>currently</h3>
+          <ul>
+            <li>shipping ERP and AI features at Kwilo</li>
+            <li>squeezing emotion out of 826 Hindi clips before 12 Oct</li>
+            <li>290 LeetCode problems in, 253 of them in Java</li>
+          </ul>
+
+          <h3><span class="md">## </span>off the clock</h3>
+          <p>Lazy Monks: four of us, 10+ hackathons, one podium (3rd at BuzzOnEarth, IIT Kanpur). First place at Turing Much, the college ML competition. Core member of cryptX, the college technical team.</p>
+        </div>
+        <aside role="note" class="anno anno--l" style="--y: 210px">this list is the actual pitch. the stack changes; the <u>habit</u> doesn't -></aside>
+      </article>
+
+      <div class="about__side">
+        <figure class="panel">
+          <div class="panel__bar"><span>Fig. A / subject</span><span class="tag">[NO PHOTO]</span></div>
+          <div class="frame" aria-hidden="true"><span class="frame__mono">N.A.</span></div>
+          <figcaption class="frame-cap">photo: N/A. which are also my initials.</figcaption>
+        </figure>
+        <section class="panel" aria-label="Quick facts">
+          <div class="panel__bar"><span>Fig. B / facts</span><span class="tag">[VERIFIED]</span></div>
+          <dl class="facts">
+            <div><dt>based in</dt><dd>Bengaluru</dd></div>
+            <div><dt>graduating</dt><dd>Jul 2027</dd></div>
+            <div><dt>CGPA</dt><dd>8.50 / 10</dd></div>
+            <div><dt>LeetCode</dt><dd>290 (98 med, 12 hard)</dd></div>
+            <div><dt>TryHackMe</dt><dd>top 2%</dd></div>
+            <div><dt>certs</dt><dd>OCI GenAI Pro, APIsec ACP</dd></div>
+          </dl>
+        </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== SKILLS =========================== -->
+<section class="sec" id="skills" aria-labelledby="skills-title" tabindex="-1">
+  <div class="wrap">
+    <header class="sec-head grid ruled">
+      <div class="sec-head__idx label"><span>&sect;04 / skills</span><button class="cmdlink" type="button" data-cmd="skills">$ skills</button></div>
+      <h2 class="sec-head__title" id="skills-title">Skills, <em>honestly</em><span class="cursor cursor--sm" aria-hidden="true"></span></h2>
+      <p class="sec-head__note">no logo wall. you can't grep a logo.</p>
+    </header>
+
+    <div class="panel has-anno">
+      <div class="panel__bar"><span>Fig. 09 / skills.txt</span><span class="tag">[SELF-REPORTED]</span></div>
+      <table class="matrix" id="skills-matrix">
+        <caption class="sr-only">Skills by domain and how often I use them</caption>
+        <colgroup><col class="c-key"><col><col><col></colgroup>
+        <thead>
+          <tr>
+            <th scope="col"><span>domain</span></th>
+            <th scope="col"><span>daily</span><small>used this week</small></th>
+            <th scope="col"><span>comfortable</span><small>shipped it, no docs for basics</small></th>
+            <th scope="col"><span>dabbling</span><small>shipped once, docs open</small></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">LLMs &amp; agents</th>
+            <td data-level="daily"><ul><li>few-shot prompt design</li><li>Gemini on Vertex AI</li><li>Azure OpenAI</li><li>eval harnesses</li></ul></td>
+            <td data-level="comfortable"><ul><li>LangGraph</li><li>LangChain</li><li>RAG with pgvector</li><li>AWS Bedrock</li><li>multi-agent loops</li></ul></td>
+            <td data-level="dabbling"><ul><li>Sarvam AI</li><li>Claude API</li></ul></td></tr>
+          <tr><th scope="row">Models &amp; data</th>
+            <td data-level="daily"><ul><li>pandas</li><li>NumPy</li></ul></td>
+            <td data-level="comfortable"><ul><li>PyTorch</li><li>scikit-learn</li><li>Whisper / w2v-BERT probing</li><li>matplotlib</li></ul></td>
+            <td data-level="dabbling"><ul><li>TensorFlow</li><li>OpenCV</li><li>MediaPipe</li><li>federated learning</li></ul></td></tr>
+          <tr><th scope="row">Backend</th>
+            <td data-level="daily"><ul><li>FastAPI</li><li>SQLAlchemy async</li><li>PostgreSQL</li><li>Alembic</li><li>pytest</li></ul></td>
+            <td data-level="comfortable"><ul><li>Flask</li><li>Spring Boot</li><li>REST</li><li>WebSockets</li><li>Postgres RLS</li></ul></td>
+            <td data-level="dabbling"><ul><li>Supabase</li><li>Firebase</li><li>Prisma</li></ul></td></tr>
+          <tr><th scope="row">Frontend</th>
+            <td data-level="daily"><ul><li>React</li><li>TanStack Query</li></ul></td>
+            <td data-level="comfortable"><ul><li>Tailwind</li><li>Vite</li><li>React Native (Expo)</li><li>vitest</li></ul></td>
+            <td data-level="dabbling"><ul><li>Next.js</li><li>Phaser</li></ul></td></tr>
+          <tr><th scope="row">MLOps &amp; cloud</th>
+            <td data-level="daily"><ul><li>Git</li><li>Docker</li><li>CI on GitHub Actions</li></ul></td>
+            <td data-level="comfortable"><ul><li>GCP Cloud Run + GCS</li><li>Kaggle GPU pipelines</li><li>uv</li></ul></td>
+            <td data-level="dabbling"><ul><li>Azure Container Apps</li><li>AWS EC2 / S3</li><li>Cloudflare</li></ul></td></tr>
+          <tr><th scope="row">Languages</th>
+            <td data-level="daily"><ul><li>Python</li><li>TypeScript</li></ul></td>
+            <td data-level="comfortable"><ul><li>Java</li><li>SQL</li><li>Bash</li></ul></td>
+            <td data-level="dabbling"><ul><li>C</li><li>C++</li><li>Rust (Soroban)</li></ul></td></tr>
+          <tr><th scope="row">Security</th>
+            <td data-level="daily" class="none">none right now (was daily in 2025)</td>
+            <td data-level="comfortable"><ul><li>Burp Suite</li><li>nmap</li><li>OWASP Top 10</li><li>API security</li><li>gobuster</li></ul></td>
+            <td data-level="dabbling"><ul><li>sqlmap</li><li>hydra</li><li>hashcat</li><li>Scapy</li><li>Web Crypto</li></ul></td></tr>
+        </tbody>
+      </table>
+      <aside role="note" class="anno anno--r" style="--y: 140px">the empty cell is deliberate. <u>honest</u> beats exhaustive</aside>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== CONTACT =========================== -->
+<section class="sec" id="contact" aria-labelledby="contact-title" tabindex="-1">
+  <div class="wrap">
+    <div class="panel contact has-anno">
+      <div class="panel__bar"><span>Fig. 10 / contact</span><span class="tag">[OPEN]</span></div>
+      <div class="contact__body">
+        <h2 class="contact__title" id="contact-title">Got a problem that has to <em>work</em>?</h2>
+        <dl class="contact__list">
+          <div><dt>email</dt><dd><a href="mailto:nishanthantony5@gmail.com">nishanthantony5@gmail.com</a></dd></div>
+          <div><dt>phone</dt><dd><a href="tel:+919632148834">+91 96321 48834</a></dd></div>
+          <div><dt>github</dt><dd><a href="https://github.com/Nish344" target="_blank" rel="noopener">github.com/Nish344</a></dd></div>
+          <div><dt>linkedin</dt><dd><a href="https://www.linkedin.com/in/nishanth-antony-b60110289/" target="_blank" rel="noopener">in/nishanth-antony</a></dd></div>
+          <div><dt>leetcode</dt><dd><a href="https://leetcode.com/u/Nish345/" target="_blank" rel="noopener">u/Nish345</a></dd></div>
+          <div><dt>resume</dt><dd><a href="resume.pdf">resume.pdf</a></dd></div>
+        </dl>
+        <div class="copyline">
+          <code id="mailto-cmd">$ open mailto:nishanthantony5@gmail.com</code>
+          <button class="chip" type="button" data-copy="nishanthantony5@gmail.com" aria-describedby="copy-status">copy</button>
+          <span class="copy-status" id="copy-status" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+      <aside role="note" class="anno anno--r" style="--y: 120px">replies within a day. faster if the problem is <u>weird</u></aside>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap grid footer__grid ruled">
+    <div class="footer__col">
+      <p><strong>Colophon.</strong> Set in Instrument Serif and JetBrains Mono. One hand-written HTML file: no framework, no template, no tracking, no cookies.</p>
+    </div>
+    <div class="footer__col">
+      <p>Hosted on Cloudflare Pages. The orange is #FF5F00 and it is rationed.</p>
+      <p>&copy; 2026 Nishanth Antony.</p>
+    </div>
+    <div class="footer__col footer__col--r">
+      <p>last updated <time datetime="2026-10-03">2026-10-03</time></p>
+      <p><a href="#top">cd ~</a></p>
+    </div>
+  </div>
+</footer>
+
+<button class="chip term-fab" id="term-fab" type="button" hidden><span class="chip__p" aria-hidden="true">&gt;_</span>shell<span class="sr-only">: open terminal, shortcut</span> <kbd>/</kbd></button>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const root = document.documentElement;
+  const RM = matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced = () => RM.matches;
+  const store = (k, v) => { try { v === undefined ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} };
+
+  /* ---------- content constants (edit here) ---------- */
+  const EMAIL = 'nishanthantony5@gmail.com';
+  const PHONE = ['+91 96321 48834', 'tel:+919632148834'];
+  const LINKS = {
+    github: ['github.com/Nish344', 'https://github.com/Nish344'],
+    linkedin: ['in/nishanth-antony', 'https://www.linkedin.com/in/nishanth-antony-b60110289/'],
+    leetcode: ['u/Nish345', 'https://leetcode.com/u/Nish345/'],
+    tryhackme: ['p/N1sh4nth', 'https://tryhackme.com/p/N1sh4nth'],
+  };
+
+  /* =================== 1. boot log =================== */
+  if (root.classList.contains('booting')) {
+    store('booted', '1');
+    const end = () => root.classList.remove('booting');
+    const timer = setTimeout(end, 1600);
+    const skip = (e) => {
+      if (!root.classList.contains('booting')) return;
+      if (e.type === 'keydown') {
+        if (['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return;
+        e.preventDefault(); e.stopImmediatePropagation();
+      }
+      clearTimeout(timer); end();
+    };
+    addEventListener('keydown', skip, true);
+    addEventListener('pointerdown', skip, true);
+  }
+
+  /* =================== 2. theme =================== */
+  const themeBtn = $('#theme-switch');
+  const metaTheme = $('meta[name="theme-color"]');
+  function setTheme(t, save = true) {
+    root.setAttribute('data-theme', t);
+    themeBtn.setAttribute('aria-pressed', String(t === 'dark'));
+    metaTheme.content = t === 'dark' ? '#0F0F0E' : '#F2EFE6';
+    if (save) try { localStorage.setItem('theme', t); } catch (e) {}
+  }
+  setTheme(root.getAttribute('data-theme') || 'light', false);
+  themeBtn.addEventListener('click', () => setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+  /* =================== 3. scroll-aware nav =================== */
+  const navLinks = $$('[data-nav]');
+  const navIO = new IntersectionObserver((entries) => {
+    for (const en of entries) {
+      if (!en.isIntersecting) continue;
+      for (const a of navLinks) {
+        const on = a.getAttribute('href') === '#' + en.target.id;
+        a.classList.toggle('is-active', on);
+        on ? a.setAttribute('aria-current', 'location') : a.removeAttribute('aria-current');
+      }
+    }
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  ['top', 'work', 'notebook', 'about', 'skills', 'contact'].forEach((id) => navIO.observe(document.getElementById(id)));
+
+  /* =================== 4. learning ledger =================== */
+  /* [date, stack, what it was for, terminal command that shows the proof] */
+  const LEDGER = [
+    ['2024-10', 'Flutter + Flask', 'crop advice for terrace farmers. third place at BuzzOnEarth, IIT Kanpur.'],
+    ['2024-11', 'Gemini API + Firebase', 'HerHealth: symptom tracking for rural women, built at She Builds AI.'],
+    ['2025-04', 'React Native (Expo)', 'Urban Trust, a civic issue tracker that checks photos with Gemini.'],
+    ['2025-05', 'Phaser + WebSockets', 'GameNest, a 2D world where people build games together.'],
+    ['2025-05', 'OpenCV', 'Green Quest: verifying that the adopted plant actually got watered.'],
+    ['2025-07', 'Burp Suite, nmap, sqlmap', '100+ CTF boxes during the REINFOSEC security internship.', 'cat resume'],
+    ['2025-09', 'LangGraph', 'making Veris investigate a claim instead of autocompleting one.', 'open veris'],
+    ['2025-09', 'IndicBERT + PostGIS', 'Samudra Prahari at SIH 2025: coastal hazard reports on a live map.'],
+    ['2025-10', 'Solidity', 'Sauda, a community marketplace for buying, selling and barter.'],
+    ['2025-12', 'Spring Boot', 'e-commerce APIs at Goloka IT. responses got 25-35% faster.', 'cat resume'],
+    ['2026-04', 'vision LLMs + eval harness', 'grading handwritten scripts against teachers at Kwilo. 0.855 MAE.', 'open grader'],
+    ['2026-07', 'Prisma', 'an asset registry and allocation state machine in 8 hours (AssetFlow).', 'cd notebook'],
+    ['2026-08', 'Razorpay API', 'PayRecover: chasing failed payments without spamming anyone.', 'open payrecover'],
+    ['2026-09', 'MediaPipe + ESP32 servos', 'aiming a water gun at faces. it misses less now.', 'cd notebook'],
+    ['2026-09', 'Whisper / w2v-BERT probing', 'hearing emotion in 826 Hindi clips. 0.93 OOF so far.', 'open dataverse'],
+    ['2026-10', 'Postgres row-level security', "because one school's fees are not another school's business. Kwilo admissions and fees.", 'open kwilo'],
+  ];
+  const track = $('#ledger-track'), detail = $('#ledger-detail'), goSlot = $('#ledger-go');
+  const month = (d) => { const [y, m] = d.split('-').map(Number); return (y - 2024) * 12 + m - 10; };
+  const rowEnds = [];
+  const pts = LEDGER.map(([date, what], i) => {
+    const m = month(date);
+    let row = rowEnds.findIndex((end) => m - end >= 2);
+    if (row < 0) row = rowEnds.length;
+    rowEnds[row] = m;
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'ledger__pt'; b.tabIndex = -1;
+    b.style.setProperty('--x', ((m + 0.5) / 25 * 100).toFixed(2));
+    b.style.setProperty('--row', row);
+    b.setAttribute('aria-label', `${date}: ${what}`);
+    b.addEventListener('click', () => pick(i));
+    track.append(b);
+    return b;
+  });
+  let cur = LEDGER.length - 1;
+  function pick(i, focus = false) {
+    cur = (i + LEDGER.length) % LEDGER.length;
+    const [date, what, why, cmd] = LEDGER[cur];
+    pts.forEach((b, k) => { b.setAttribute('aria-pressed', String(k === cur)); b.tabIndex = k === cur ? 0 : -1; });
+    const p = (cls, text) => { const el = document.createElement('p'); el.className = cls; el.textContent = text; return el; };
+    detail.replaceChildren(p('ledger__when', `${date} · ${cur + 1} / ${LEDGER.length}`), p('ledger__what', what), p('ledger__why', why));
+    goSlot.replaceChildren();
+    if (cmd) {
+      const c = document.createElement('button'); c.type = 'button'; c.className = 'chip'; c.dataset.cmd = cmd;
+      const pr = document.createElement('span'); pr.className = 'chip__p'; pr.textContent = '$';
+      c.append(pr, cmd); goSlot.append(c);
+    }
+    if (focus) pts[cur].focus();
+  }
+  pick(cur);
+  track.addEventListener('keydown', (e) => {
+    const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (k) { e.preventDefault(); pick(cur + k, true); }
+    else if (e.key === 'Home') { e.preventDefault(); pick(0, true); }
+    else if (e.key === 'End') { e.preventDefault(); pick(LEDGER.length - 1, true); }
+  });
+  $('#ledger-prev').addEventListener('click', () => pick(cur - 1));
+  $('#ledger-next').addEventListener('click', () => pick(cur + 1));
+
+  /* =================== 5. copy to clipboard =================== */
+  $$('[data-copy]').forEach((btn) => btn.addEventListener('click', async () => {
+    const status = document.getElementById(btn.getAttribute('aria-describedby'));
+    const text = btn.dataset.copy;
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.append(ta); ta.select();
+      try { ok = document.execCommand('copy'); } catch (e2) {}
+      ta.remove(); btn.focus();
+    }
+    status.textContent = ok ? 'copied: ' + text : 'copy blocked. select it by hand.';
+    btn.textContent = ok ? 'copied' : 'copy';
+    clearTimeout(btn._t); btn._t = setTimeout(() => { status.textContent = ''; btn.textContent = 'copy'; }, 2400);
+  }));
+
+  /* =================== 6. terminal =================== */
+  const term = $('#term'), slot = $('#term-slot'), out = $('#term-out'), screen = $('#term-screen');
+  const input = $('#term-input'), mirror = $('#term-mirror'), form = $('#term-form'), fab = $('#term-fab');
+  const PROMPT = 'visitor@nishanth:~$';
+  const projects = $$('.project').map((el) => ({ slug: el.dataset.slug, title: $('.project__title', el).textContent.trim(), status: el.dataset.status, el }));
+  const SLUGS = projects.map((p) => p.slug);
+  const SECTIONS = { '~': 'top', home: 'top', top: 'top', work: 'work', projects: 'work', notebook: 'notebook', about: 'about', skills: 'skills', contact: 'contact' };
+  const FILES = [['about.md', 'cat about.md'], ['resume.pdf', 'cat resume'], ['projects/', 'ls projects'], ['notebook.log', 'cd notebook'], ['skills.txt', 'skills'], ['contact.txt', 'contact']];
+  const VISIBLE = ['help', 'ls', 'cd', 'open', 'cat', 'whoami', 'skills', 'contact', 'theme', 'history', 'clear', 'sudo'];
+  const ARGS = { ls: ['projects', 'notebook'], cd: ['work', 'notebook', 'about', 'skills', 'contact', '~'], open: SLUGS, cat: ['about.md', 'resume'], theme: ['light', 'dark'], sudo: ['hire-me'] };
+
+  let hist = []; try { hist = JSON.parse(sessionStorage.getItem('term-hist') || '[]'); } catch (e) {}
+  let hIdx = hist.length, draft = '', lastFocus = null;
+
+  /* Output segments: string | C(cmd) clickable command | F(fill) prefill input | L(href) link | S(text, cls) styled span */
+  const C = (cmd, text = cmd) => ({ cmd, text });
+  const F = (fill, text) => ({ fill, text });
+  const L = (href, text) => ({ href, text });
+  const S = (text, cls = 'term__dim') => ({ text, cls });
+  const BLANK = '\u00a0';
+
+  function renderLine(parts) {
+    if (parts && parts.art) {
+      const art = document.createElement('div'); art.className = 'term__art'; art.setAttribute('aria-hidden', 'true');
+      for (const row of parts.art) {
+        const r = document.createElement('div');
+        for (const run of row.match(/#+|\.+/g)) {
+          if (run[0] === '.') { r.append(' '.repeat(run.length)); continue; }
+          const px = document.createElement('span'); px.className = 'term__px'; px.textContent = ' '.repeat(run.length); r.append(px);
+        }
+        art.append(r);
+      }
+      return art;
+    }
+    const d = document.createElement('div'); d.className = 'term__ln';
+    for (const p of [].concat(parts)) {
+      if (p == null) continue;
+      if (typeof p === 'string') { d.append(p); continue; }
+      let n;
+      if (p.cmd || p.fill) {
+        n = document.createElement('button'); n.type = 'button'; n.className = 'term__link';
+        p.cmd ? (n.dataset.cmd = p.cmd) : (n.dataset.fill = p.fill);
+      } else if (p.href) {
+        n = document.createElement('a'); n.className = 'term__link'; n.href = p.href;
+        if (/^https?:/.test(p.href)) { n.target = '_blank'; n.rel = 'noopener'; }
+      } else { n = document.createElement('span'); n.className = p.cls; }
+      n.textContent = p.text; d.append(n);
+    }
+    return d;
+  }
+
+  /* ----- navigation side-effects ----- */
+  function go(el) {
+    const docked = term.classList.contains('is-docked');
+    el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+    if (el.classList.contains('project')) {
+      el.classList.remove('is-targeted'); void el.offsetWidth; el.classList.add('is-targeted');
+      setTimeout(() => el.classList.remove('is-targeted'), 1600);
+    }
+    if (!docked) { if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1'); el.focus({ preventScroll: true }); }
+  }
+
+  /* ----- fuzzy suggestion (Levenshtein) ----- */
+  function lev(a, b) {
+    const m = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+      let prev = m[0]; m[0] = i;
+      for (let j = 1; j <= b.length; j++) { const t = m[j]; m[j] = Math.min(m[j] + 1, m[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = t; }
+    }
+    return m[b.length];
+  }
+  function closest(word, list) {
+    let best = null, bd = Infinity;
+    for (const c of list) { const d = lev(word, c); if (d < bd) { bd = d; best = c; } }
+    return bd <= Math.max(2, Math.floor(word.length / 3)) ? best : null;
+  }
+
+  /* 5-row block letters for whoami. '#' is a filled cell. */
+  const GLYPHS = {
+    n: ['#..#', '##.#', '#.##', '#..#', '#..#'], i: ['###', '.#.', '.#.', '.#.', '###'],
+    s: ['.###', '#...', '.##.', '...#', '###.'], h: ['#..#', '#..#', '####', '#..#', '#..#'],
+    a: ['.##.', '#..#', '####', '#..#', '#..#'], t: ['###', '.#.', '.#.', '.#.', '.#.'],
+    o: ['.##.', '#..#', '#..#', '#..#', '.##.'], y: ['#.#', '#.#', '.#.', '.#.', '.#.'],
+  };
+  const banner = (word) => [0, 1, 2, 3, 4].map((r) => [...word].map((ch) => GLYPHS[ch][r]).join('.'));
+
+  /* ----- commands: each returns an array of lines, or null to skip output ----- */
+  const HELP = [
+    ['help', 'this list'], ['ls', 'list files (ls projects)'], ['cd <section>', 'work notebook about skills contact'],
+    ['open <project>', 'scroll to a project'], ['cat <file>', 'about.md, resume'], ['whoami', 'who is this'],
+    ['skills', 'the honest matrix'], ['contact', 'ways to reach me'], ['theme [light|dark]', 'paper or ink'],
+    ['history', 'what you typed'], ['clear', 'wipe the screen'], ['sudo hire-me', 'you know what to do'],
+  ];
+  const cmds = {
+    help: () => ['commands. click one, or type it:', ...HELP.map(([c, d]) => {
+      const base = c.replace(/\s*[<[].*$/, '');
+      return ['  ', /[<[]/.test(c) ? F(base + ' ', c) : C(c), ' '.repeat(Math.max(1, 20 - c.length)), S(d)];
+    }), BLANK, S('tab completes. up/down for history. esc leaves the shell.')],
+
+    ls: (a) => {
+      const t = (a[0] || '').replace(/\/$/, '');
+      if (!t) return [FILES.flatMap(([f, c]) => [C(c, f), '  '])];
+      if (t === 'projects' || t === 'work') return projects.map((p) => ['  ', C('open ' + p.slug, p.slug), ' '.repeat(12 - p.slug.length), S(p.title)]).concat([BLANK, S('click a slug, or: open <slug>')]);
+      if (t.startsWith('notebook')) return [[C('cd notebook', 'notebook.log'), S('  14 entries, newest first.')]];
+      return [`ls: cannot access '${t}': no such file or directory`];
+    },
+
+    cd: (a) => {
+      let t = (a[0] || '~').replace(/^[#/]+|\/$/g, '').toLowerCase();
+      if (t === '..' || t === '') t = '~';
+      const id = SECTIONS[t];
+      if (!id) {
+        const g = closest(t, Object.keys(SECTIONS));
+        return [`cd: no such section: ${t}`, g ? ['did you mean ', C('cd ' + g, g), '?'] : ['sections: ', ...ARGS.cd.slice(0, 5).flatMap((s) => [C('cd ' + s, s), ' '])]];
+      }
+      go(document.getElementById(id));
+      return [S('-> /' + (id === 'top' ? '' : id))];
+    },
+
+    open: (a) => {
+      const s = (a[0] || '').toLowerCase();
+      if (!s) return ['usage: open <project>', ['projects: ', ...SLUGS.flatMap((x) => [C('open ' + x, x), ' '])]];
+      const p = projects.find((x) => x.slug === s);
+      if (!p) { const g = closest(s, SLUGS); return [`open: no project called '${s}'.`, g ? ['did you mean ', C('open ' + g, g), '?'] : ['try ', C('ls projects')]]; }
+      const d = $('details', p.el); if (d) d.open = true;
+      go(p.el);
+      return [S(`opening ${p.title} [${p.status}]`)];
+    },
+
+    cat: (a) => {
+      const f = (a[0] || '').toLowerCase();
+      if (!f) return [['usage: cat <file>   ', C('cat about.md', 'about.md'), '  ', C('cat resume', 'resume')]];
+      if (f === 'about.md' || f === 'about') return [
+        S('# about.md'),
+        'Nishanth Antony. AI/ML intern at Kwilo AI, final-year CS at BIT Bengaluru (CGPA 8.50).',
+        BLANK,
+        'I ship LLM systems that have to be right, not just impressive: a vision-LLM grader that lands within one mark of the teacher about 80% of the time, and the fee ledgers and admission flows around it.',
+        BLANK,
+        'I learn by building. Security through 100+ CTFs, backends through Spring Boot, agents through LangGraph, speech through Whisper. Next problem, next lane.',
+        BLANK, [C('cd about', '-> read the full about.md')],
+      ];
+      if (f.startsWith('resume')) return [
+        'NISHANTH ANTONY  ai/ml engineer, bengaluru', BLANK, S('experience'),
+        '2026-now  Kwilo AI ........ AI/ML intern', '2025-26   Goloka IT ....... backend intern', '2025      REINFOSEC ....... security intern',
+        BLANK, S('education'), '2023-27   BIT Bengaluru ... B.E. CSE, 8.50',
+        BLANK, [L('resume.pdf', '-> resume.pdf'), S('  (pdf)')],
+      ];
+      if (f === 'skills.txt') return cmds.skills();
+      if (f === 'contact.txt') return cmds.contact();
+      if (f === 'notebook.log') return cmds.cd(['notebook']);
+      return [[`cat: ${f}: no such file. try `, C('ls')]];
+    },
+
+    whoami: () => [
+      { art: banner('nishanth') }, { art: banner('antony') },
+      [S('Nishanth Antony', 'sr-only'), S('ai/ml engineer · bengaluru · learns whatever the problem needs')],
+      BLANK, [S('you: '), 'visitor', S(' (uid=1000, groups=curious)')],
+      ['more: ', C('cat about.md'), '  ', C('contact')],
+    ],
+
+    skills: () => {
+      const rows = $$('#skills-matrix tbody tr').map((tr) => {
+        const daily = $$('td[data-level="daily"] li', tr).map((li) => li.textContent);
+        return ['  ', $('th', tr).textContent.padEnd(16), daily.length ? daily.join(', ') : S('(none daily right now)')];
+      });
+      return [S('domain          daily'), ...rows, BLANK, [C('cd skills', '-> full matrix, with comfortable and dabbling')]];
+    },
+
+    contact: () => [
+      ['email     ', L('mailto:' + EMAIL, EMAIL)],
+      ['phone     ', L(PHONE[1], PHONE[0])],
+      ...Object.entries(LINKS).map(([k, [t, h]]) => [k.padEnd(10), L(h, t)]),
+      BLANK, ['or: ', C('sudo hire-me'), S(' (same thing, louder)')],
+    ],
+
+    theme: (a) => {
+      const t = a[0] || (root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+      if (t !== 'light' && t !== 'dark') return [`theme: unknown theme '${t}'. use light or dark.`];
+      setTheme(t);
+      return [t === 'dark' ? 'lights off. the orange stays.' : 'paper mode. the orange stays.'];
+    },
+
+    history: () => hist.length ? hist.map((h, i) => [S(String(i + 1).padStart(3) + '  '), C(h)]) : ['no history yet. a blank slate.'],
+
+    clear: () => { out.replaceChildren(); return null; },
+
+    sudo: (a) => {
+      if (a[0] === 'hire-me' || a.join(' ') === 'hire me') return [
+        '[sudo] password for visitor: ********',
+        S('checking credentials... you have an open role. that counts.'),
+        ['access granted. ', S('nishanth', 'term__hi'), ' added to your sudoers file.'],
+        S('this incident will be reported (to his inbox).'),
+        BLANK, [L(`mailto:${EMAIL}?subject=${encodeURIComponent('sudo hire-me')}`, '-> compose the email')],
+      ];
+      return ['visitor is not in the sudoers file. this incident will be reported.', ['(the one sudo that works: ', C('sudo hire-me'), ')']];
+    },
+
+    /* unlisted */
+    pwd: () => ['/home/visitor/lab'],
+    date: () => [new Date().toString()],
+    echo: (a) => [a.join(' ') || BLANK],
+    exit: () => ['logout? this is a web page. press esc to leave the shell.'],
+  };
+
+  function notFound(raw, name) {
+    const phrases = [...VISIBLE, 'ls projects', 'cat about.md', 'cat resume', 'sudo hire-me'];
+    const g = /hire/i.test(raw) ? 'sudo hire-me' : closest(raw.toLowerCase(), phrases) || closest(name.toLowerCase(), VISIBLE);
+    return [[`command not found: ${name}.`, g ? [' did you mean ', C(g), '?'] : '', ' try ', C('help'), '.'].flat()];
+  }
+
+  /* ----- typed output (fast, skippable, instant under reduced motion) ----- */
+  let job = null;
+  const frame = () => new Promise((r) => requestAnimationFrame(r));
+  const toBottom = () => { screen.scrollTop = screen.scrollHeight; };
+  function finishTyping() { if (job) job.skip = true; }
+  async function typeOut(el) {
+    if (reduced()) return;
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), nodes = [];
+    while (w.nextNode()) nodes.push(w.currentNode);
+    const full = nodes.map((n) => n.data);
+    const total = full.reduce((s, t) => s + t.length, 0);
+    const step = Math.max(4, Math.ceil(total / 24)); /* every response finishes in ~24 frames */
+    nodes.forEach((n) => (n.data = ''));
+    const me = (job = { skip: false });
+    out.setAttribute('aria-busy', 'true');
+    let k = 0, j = 0;
+    while (k < nodes.length && !me.skip) {
+      let budget = step;
+      while (budget > 0 && k < nodes.length) {
+        const take = Math.min(full[k].length - j, budget);
+        j += take; budget -= take; nodes[k].data = full[k].slice(0, j);
+        if (j >= full[k].length) { k++; j = 0; }
+      }
+      toBottom(); await frame();
+    }
+    nodes.forEach((n, i) => (n.data = full[i]));
+    if (job === me) { job = null; out.setAttribute('aria-busy', 'false'); }
+    toBottom();
+  }
+
+  /* ----- run a command ----- */
+  function run(raw) {
+    finishTyping();
+    const v = raw.trim();
+    if (v && hist[hist.length - 1] !== v) { hist.push(v); hist = hist.slice(-50); store('term-hist', JSON.stringify(hist)); }
+    hIdx = hist.length; draft = '';
+    let lines = [];
+    if (v) {
+      const [name, ...args] = v.split(/\s+/);
+      const key = name.toLowerCase();
+      lines = Object.prototype.hasOwnProperty.call(cmds, key) ? cmds[key](args) : notFound(v, name);
+    }
+    if (lines === null) return;
+    const block = document.createElement('div'); block.className = 'term__block';
+    block.append(renderLine([S(PROMPT, 'term__ps'), ' ', v]));
+    if (lines.length) {
+      const resp = document.createElement('div');
+      lines.forEach((l) => resp.append(renderLine(l)));
+      block.append(resp); out.append(block); typeOut(resp);
+    } else out.append(block);
+    toBottom();
+  }
+
+  /* ----- input mirror: draws the orange block cursor at the caret ----- */
+  function renderMirror() {
+    const v = input.value, at = input.selectionStart ?? v.length;
+    const cur = document.createElement('span'); cur.className = 'term__cursor'; cur.textContent = v[at] || ' ';
+    mirror.replaceChildren(v.slice(0, at), cur, v.slice(at + 1));
+    if (!v && !mirror.style.transform) return;
+    requestAnimationFrame(() => { const sl = input.value ? input.scrollLeft : 0; mirror.style.transform = sl ? `translateX(${-sl}px)` : ''; });
+  }
+  const moveEnd = () => { const n = input.value.length; input.setSelectionRange(n, n); renderMirror(); };
+  ['input', 'keyup', 'click', 'select'].forEach((e) => input.addEventListener(e, renderMirror));
+  document.addEventListener('selectionchange', () => { if (document.activeElement === input) renderMirror(); });
+  input.addEventListener('focus', () => { term.classList.add('is-focused'); renderMirror(); });
+  input.addEventListener('blur', () => term.classList.remove('is-focused'));
+
+  /* ----- tab completion. Returns false when Tab should move focus instead. ----- */
+  function complete() {
+    const v = input.value.replace(/^\s+/, '');
+    if (!v) return false;
+    const parts = v.split(/\s+/);
+    const pool = parts.length === 1 ? VISIBLE : ARGS[parts[0].toLowerCase()] || [];
+    const prefix = parts[parts.length - 1].toLowerCase();
+    const m = pool.filter((c) => c.startsWith(prefix));
+    if (!m.length) return false;
+    const head = parts.slice(0, -1).join(' ') + (parts.length > 1 ? ' ' : '');
+    if (m.length === 1) input.value = head + m[0] + (parts.length === 1 && ARGS[m[0]] ? ' ' : '');
+    else {
+      let cp = m[0]; for (const x of m) while (!x.startsWith(cp)) cp = cp.slice(0, -1);
+      input.value = head + cp;
+      const block = document.createElement('div'); block.className = 'term__block';
+      block.append(renderLine([S(PROMPT, 'term__ps'), ' ', input.value]), renderLine(m.flatMap((x) => [parts.length === 1 ? F(x + ' ', x) : C(head + x, x), '  '])));
+      out.append(block); toBottom();
+    }
+    moveEnd();
+    return true;
+  }
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); const v = input.value; input.value = ''; renderMirror(); run(v); });
+  input.addEventListener('keydown', (e) => {
+    if (job && e.key !== 'Tab') finishTyping();
+    if (e.key === 'Tab' && !e.shiftKey) { if (complete()) e.preventDefault(); }
+    else if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); form.requestSubmit(); }
+    else if (e.key === 'ArrowUp') {
+      if (!hist.length) return; e.preventDefault();
+      if (hIdx === hist.length) draft = input.value;
+      hIdx = Math.max(0, hIdx - 1); input.value = hist[hIdx]; moveEnd();
+    } else if (e.key === 'ArrowDown') {
+      if (hIdx >= hist.length) return; e.preventDefault();
+      hIdx++; input.value = hIdx === hist.length ? draft : hist[hIdx]; moveEnd();
+    } else if (e.key === 'Escape') { e.preventDefault(); leave(); }
+    else if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); out.replaceChildren(); }
+  });
+
+  /* Clicking the screen focuses the prompt (unless selecting text or hitting a link) */
+  screen.addEventListener('click', (e) => {
+    if (e.target.closest('a, button')) return;
+    if (String(getSelection())) return;
+    input.focus({ preventScroll: true });
+  });
+  screen.addEventListener('pointerdown', finishTyping);
+
+  /* ----- docking: the terminal follows you once the hero is out of view ----- */
+  let slotVisible = true;
+  const isDocked = () => term.classList.contains('is-docked');
+  const updateFab = () => { fab.hidden = slotVisible || isDocked(); };
+  function syncViewport() {
+    const vv = window.visualViewport;
+    if (!vv || !isDocked()) return;
+    const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    term.style.bottom = kb ? `calc(${kb}px + var(--dock-inset))` : '';
+  }
+  function dock() {
+    if (isDocked()) return;
+    slot.style.minHeight = slot.offsetHeight + 'px';
+    term.classList.add('is-docked'); updateFab(); syncViewport(); toBottom();
+  }
+  function undock() {
+    if (!isDocked()) return;
+    term.classList.remove('is-docked'); term.style.bottom = ''; slot.style.minHeight = ''; updateFab();
+  }
+  function openTerminal(focus = true) {
+    if (!slotVisible) dock();
+    if (focus) { if (document.activeElement !== input) lastFocus = document.activeElement; input.focus({ preventScroll: true }); }
+  }
+  function leave() {
+    const wasDocked = isDocked();
+    if (wasDocked) undock();
+    const back = lastFocus && lastFocus !== document.body && document.contains(lastFocus) ? lastFocus : (wasDocked && !fab.hidden ? fab : null);
+    back ? back.focus({ preventScroll: true }) : input.blur();
+  }
+  new IntersectionObserver(([en]) => { slotVisible = en.isIntersecting; if (slotVisible) undock(); updateFab(); }, { threshold: 0.15 }).observe(slot);
+  window.visualViewport?.addEventListener('resize', syncViewport);
+  window.visualViewport?.addEventListener('scroll', syncViewport);
+  $('#term-close').addEventListener('click', leave);
+  fab.addEventListener('click', () => openTerminal());
+  $$('[data-open-term]').forEach((b) => b.addEventListener('click', () => openTerminal()));
+
+  /* Clickable equivalents: output links, chips, and section "$ cmd" labels */
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cmd], [data-fill]');
+    if (!b) return;
+    if (!term.contains(b)) openTerminal(false);
+    if (b.dataset.fill) { input.value = b.dataset.fill; input.focus({ preventScroll: true }); moveEnd(); return; }
+    run(b.dataset.cmd);
+  });
+
+  /* Global shortcut: / or ~ opens the shell (ignored while typing elsewhere) */
+  document.addEventListener('keydown', (e) => {
+    if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.target.closest && e.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (e.key === '/' || e.key === '~') { e.preventDefault(); openTerminal(); }
+  });
+
+  renderMirror();
+})();
+</script>
+</body>
+</html>

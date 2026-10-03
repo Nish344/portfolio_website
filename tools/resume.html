@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!-- Render with:
+  google-chrome --headless=new --no-pdf-header-footer --print-to-pdf=site/resume.pdf tools/resume.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nishanth Antony - AI/ML Engineer - Resume</title>
+<meta name="author" content="Nishanth Antony">
+<meta name="description" content="Resume of Nishanth Antony, AI/ML engineer in Bengaluru.">
+<style>
+  @font-face { font-family: "Instrument Serif"; src: url("../site/fonts/InstrumentSerif-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Instrument Serif"; font-style: italic; src: url("../site/fonts/InstrumentSerif-italic.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400 700; src: url("../site/fonts/JetBrainsMono-normal.woff2") format("woff2"); }
+
+  @page { size: A4; margin: 10mm 12mm 9mm; }
+  :root { --ink: #111110; --soft: #55534C; --hair: #CFCBBF; --accent: #FF5F00; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font: 400 9pt/1.34 "Fira Sans", "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+  .mono { font-family: "JetBrains Mono", "Fira Mono", monospace; }
+
+  header { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 4mm; padding-bottom: 2.6mm; border-bottom: 1.4pt solid var(--ink); }
+  h1 { font: 400 30pt/1 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; }
+  h1 em { font-style: italic; background: var(--accent); padding: 0 1.2mm 0 0.4mm; }
+  .role { font: 500 8pt/1.3 "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin-top: 3.6mm; }
+  .contact { font: 400 7.9pt/1.55 "JetBrains Mono", monospace; text-align: right; }
+  .contact a:hover { text-decoration: underline; }
+
+  .summary { margin-top: 2.6mm; font-size: 9.4pt; }
+  .summary strong { font-weight: 600; }
+
+  section { margin-top: 3.4mm; }
+  h2 {
+    display: flex; align-items: center; gap: 2mm;
+    font: 700 7.6pt/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
+    margin-bottom: 1.6mm;
+  }
+  h2::before { content: ""; width: 2.2mm; height: 2.2mm; background: var(--accent); border: 0.6pt solid var(--ink); }
+  h2::after { content: ""; flex: 1; height: 0.6pt; background: var(--hair); }
+
+  .item + .item { margin-top: 2.2mm; }
+  .item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; }
+  .item__title { font-weight: 600; font-size: 9.8pt; }
+  .item__title span { font-weight: 400; color: var(--soft); }
+  .item__when { font: 400 7.8pt "JetBrains Mono", monospace; color: var(--soft); white-space: nowrap; }
+  .item__stack { font: 400 7.6pt/1.4 "JetBrains Mono", monospace; color: var(--soft); margin-top: 0.3mm; }
+  ul { list-style: none; margin-top: 0.8mm; }
+  li { position: relative; padding-left: 3.4mm; }
+  li + li { margin-top: 0.5mm; }
+  li::before { content: ""; position: absolute; left: 0.4mm; top: 0.62em; width: 1.3mm; height: 0.6pt; background: var(--ink); }
+  b { font-weight: 600; }
+
+  .skills { display: grid; grid-template-columns: 30mm 1fr; gap: 0.7mm 3mm; }
+  .skills dt { font: 500 7.8pt/1.5 "JetBrains Mono", monospace; color: var(--soft); text-transform: lowercase; }
+  .skills dd { font-size: 9pt; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Nishanth <em>Antony</em></h1>
+    <p class="role">AI/ML Engineer &middot; LLM systems, evaluation, backend</p>
+  </div>
+  <div class="contact">
+    <a href="mailto:nishanthantony5@gmail.com">nishanthantony5@gmail.com</a><br>
+    <a href="tel:+919632148834">+91 96321 48834</a> &middot; Bengaluru, India<br>
+    <a href="https://nishanth-antony.pages.dev/">nishanth-antony.pages.dev</a><br>
+    <a href="https://github.com/Nish344">github.com/Nish344</a> &middot; <a href="https://www.linkedin.com/in/nishanth-antony-b60110289/">linkedin.com/in/nishanth-antony</a>
+  </div>
+</header>
+
+<p class="summary">
+  Final-year CS student and AI/ML intern building LLM systems that have to be <b>measurably right</b>, plus the production backends around them.
+  I pick up whatever stack the problem needs, and I measure before I claim.
+</p>
+
+<section>
+  <h2>Experience</h2>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Kwilo AI <span>&middot; AI/ML Intern &middot; Bengaluru</span></p>
+      <p class="item__when">Apr&ndash;May 2026, Jul 2026&ndash;present</p>
+    </div>
+    <ul>
+      <li>Built a <b>vision-LLM benchmarking pipeline</b> grading scanned handwritten scripts per subpart against teacher marks (4 subjects, 11 test cells; GPT-5.4 Mini, Gemini 3 Flash, 3.1 Pro), with run manifests and auto-generated MAE, &plusmn;1 and QWK reports.</li>
+      <li>Few-shot exemplars cut grading error <b>28% on GPT (MAE 1.259 &rarr; 0.910)</b> and <b>18% on Gemini Flash</b>; within-one-mark agreement rose 68.5% &rarr; 80.1%. Best pipeline: <b>0.855 MAE, zero script failures</b>; it set the production model choice.</li>
+      <li>Shipped <b>answer-sheet auto-mapping</b> (filename match, then Gemini OCR of the roll number) behind a soft-failure contract that never blocks an upload.</li>
+      <li>Built a public <b>blog platform end to end</b>: Postgres models, Alembic migrations, rate-limited FastAPI endpoints, HTML sanitisation, admin editor, prerendered pages.</li>
+      <li>School ERP in FastAPI + React: <b>race-safe fee installment settlement</b> with serialised locks, receipts and due notices, and admissions that confirm before linking parent accounts; Postgres RLS, tests on every change.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Goloka IT <span>&middot; Backend Development Intern &middot; Remote</span></p>
+      <p class="item__when">Dec 2025&ndash;Mar 2026</p>
+    </div>
+    <ul>
+      <li>Built REST APIs for an e-commerce platform in <b>Java Spring Boot</b> across Agile sprints, improving response times by <b>25&ndash;35%</b>; added auth workflows and rate limiting, deployed through CI/CD to AWS EC2.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">REINFOSEC <span>&middot; Cybersecurity Intern &middot; Bengaluru</span></p>
+      <p class="item__when">Jul&ndash;Aug 2025</p>
+    </div>
+    <ul>
+      <li>Solved <b>100+ CTF challenges</b> (TryHackMe, PortSwigger, picoCTF, Natas) covering recon, web exploitation and password attacks with nmap, Burp Suite, sqlmap and hydra.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Projects</h2>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">PayRecover <span>&middot; Razorpay AI Buildathon 2026</span></p>
+      <p class="item__when"><a href="https://github.com/Nish344/payrecover-agent">github.com/Nish344/payrecover-agent</a></p>
+    </div>
+    <ul>
+      <li>Agent that diagnoses failed payments and recovers revenue through bounded actions behind a policy gate, kill switch and audit log (rules first, Gemini for ambiguous cases). Recovered <b>31.27% of failed value</b> (&#8377;44,205 of &#8377;141,353) and <b>76% of recoverable customers</b> on a seeded evaluation batch.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Hindi Speech Emotion Recognition <span>&middot; DataVerse competition, ongoing</span></p>
+      <p class="item__when">Sep&ndash;Oct 2026</p>
+    </div>
+    <ul>
+      <li>4-class emotion recognition from 826 clips using frozen Whisper-large and w2v-BERT 2.0 features with linear heads, near-duplicate-grouped CV, speed augmentation with TTA and a bagged greedy ensemble: <b>0.9346 OOF, 0.9306 public leaderboard</b>.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Veris Truth Engine <span>&middot; Recurzive V2 hackathon</span></p>
+      <p class="item__when">Sep 2025</p>
+    </div>
+    <ul>
+      <li>LangGraph investigative agent: collector, verifier with per-evidence trust scores, author/mention graph and a refiner loop that decides when to dig deeper; FastAPI service with a Next.js UI.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Federated IoT Anomaly Detection <span>&middot; research project</span></p>
+      <p class="item__when">2026</p>
+    </div>
+    <ul>
+      <li>Dockerised federated clients (cameras, sensors, controllers) detecting spoofing and DDoS without centralising traffic; FedAvg vs FedProx benchmarked, <b>0.98 AUC</b> with FedProx.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2>Skills</h2>
+  <dl class="skills">
+    <dt>AI / ML</dt><dd>vision LLMs, few-shot prompting, eval harnesses, RAG, LangGraph, LangChain, PyTorch, scikit-learn, Whisper / SSL encoders</dd>
+    <dt>LLM platforms</dt><dd>Gemini (Vertex AI), Azure OpenAI, AWS Bedrock, Claude</dd>
+    <dt>Backend</dt><dd>FastAPI, Flask, Spring Boot, SQLAlchemy async, Alembic, PostgreSQL (RLS, pgvector), pytest</dd>
+    <dt>Frontend / cloud</dt><dd>React, TypeScript, Next.js, React Native; Docker, GCP Cloud Run, AWS EC2/S3, CI/CD</dd>
+    <dt>Languages</dt><dd>Python, Java, TypeScript, SQL, C, Bash &middot; security: OWASP Top 10, Burp Suite, nmap</dd>
+  </dl>
+</section>
+
+<div class="two">
+  <section>
+    <h2>Education</h2>
+    <div class="item">
+      <div class="item__head">
+        <p class="item__title">Bangalore Institute of Technology</p>
+        <p class="item__when">2023&ndash;2027</p>
+      </div>
+      <p>B.E. Computer Science &middot; <b>CGPA 8.50</b><br>specialisation: IoT, Cybersecurity &amp; Blockchain</p>
+    </div>
+    <h2 style="margin-top: 3mm">Certifications</h2>
+    <p>OCI Generative AI Professional (2025) &middot; OCI AI Foundations Associate &middot; APIsec Certified Practitioner</p>
+  </section>
+  <section>
+    <h2>Achievements</h2>
+    <ul>
+      <li><b>1st place</b>, Turing Much (college ML competition)</li>
+      <li><b>3rd place</b>, BuzzOnEarth 2024, IIT Kanpur &middot; 10+ hackathons</li>
+      <li><b>290</b> LeetCode problems &middot; <b>top 2%</b> on TryHackMe</li>
+    </ul>
+  </section>
+</div>
+
+</body>
+</html>

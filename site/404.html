@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — Nishanth Antony</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  @font-face { font-family: "JetBrains Mono"; src: url("/fonts/JetBrainsMono-normal.woff2") format("woff2"); font-weight: 400 700; font-display: swap; }
+  @font-face { font-family: "Instrument Serif"; src: url("/fonts/InstrumentSerif-italic.woff2") format("woff2"); font-style: italic; font-display: swap; }
+  :root { --paper: #F2EFE6; --ink: #111110; --soft: #55534C; --accent: #FF5F00; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #0F0F0E; --ink: #F2EFE6; --soft: #9A978D; } }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--paper); color: var(--ink); font: 15px/1.6 "JetBrains Mono", ui-monospace, monospace; padding: 16px; box-sizing: border-box; }
+  main { border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); max-width: 560px; width: 100%; }
+  .bar { display: flex; justify-content: space-between; padding: 6px 12px; border-bottom: 2px solid var(--ink); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
+  .body { padding: 24px; }
+  h1 { margin: 0 0 12px; font: italic 400 96px/0.9 "Instrument Serif", Georgia, serif; letter-spacing: -0.03em; }
+  p { margin: 0 0 8px; }
+  .dim { color: var(--soft); }
+  a { color: inherit; text-underline-offset: 3px; }
+  a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .cur { display: inline-block; width: .6em; height: 1.1em; vertical-align: -0.2em; background: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar"><span>Fig. 404 / missing</span><span>[NOT FOUND]</span></div>
+  <div class="body">
+    <h1>404</h1>
+    <p><span class="dim">visitor@nishanth:~$</span> cd <span id="path">this-page</span></p>
+    <p>cd: no such file or directory</p>
+    <p><span class="dim">visitor@nishanth:~$</span> <a href="/">cd ~</a> <span class="cur" aria-hidden="true"></span></p>
+  </div>
+</main>
+<script>document.getElementById('path').textContent = location.pathname.replace(/^\//, '') || 'this-page';</script>
+</body>
+</html>
