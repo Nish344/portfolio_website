@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!-- Render with:
+  google-chrome --headless=new --no-pdf-header-footer --print-to-pdf=site/fediot-progress.pdf tools/fediot-progress.html
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Federated IoT Anomaly Detection - Research Progress Report</title>
+<meta name="author" content="Nishanth Antony">
+<meta name="description" content="Progress report for a research project on federated autoencoders for non-IID IoT anomaly detection.">
+<style>
+  @font-face { font-family: "Instrument Serif"; src: url("../site/fonts/InstrumentSerif-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Instrument Serif"; font-style: italic; src: url("../site/fonts/InstrumentSerif-italic.woff2") format("woff2"); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 400 700; src: url("../site/fonts/JetBrainsMono-normal.woff2") format("woff2"); }
+
+  @page { size: A4; margin: 12mm 14mm 11mm; }
+  :root { --ink: #111110; --soft: #55534C; --mute: #8A877E; --hair: #CFCBBF; --paper: #F4F1EA; --accent: #FF5F00; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { font: 400 9.2pt/1.42 "Fira Sans", "Helvetica Neue", Arial, sans-serif; color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+  b { font-weight: 600; }
+  .mono { font-family: "JetBrains Mono", "Fira Mono", monospace; }
+
+  header { padding-bottom: 3mm; border-bottom: 1.4pt solid var(--ink); }
+  .kicker { font: 500 7.8pt/1.3 "JetBrains Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); }
+  h1 { font: 400 30pt/1.02 "Instrument Serif", Georgia, serif; letter-spacing: -0.01em; margin-top: 2mm; }
+  h1 em { font-style: italic; background: var(--accent); padding: 0 1.2mm 0 0.4mm; }
+  .meta { display: flex; justify-content: space-between; gap: 4mm; margin-top: 3mm; font: 400 7.9pt/1.5 "JetBrains Mono", monospace; }
+
+  .status {
+    display: grid; grid-template-columns: auto 1fr; gap: 1mm 4mm; align-items: baseline;
+    margin-top: 3.4mm; padding: 2.6mm 3.4mm; border: 1.2pt solid var(--ink); box-shadow: 1.4mm 1.4mm 0 var(--ink);
+    background: var(--paper);
+  }
+  .status dt { font: 700 7.4pt/1.5 "JetBrains Mono", monospace; letter-spacing: .12em; text-transform: uppercase; }
+  .status dt::before { content: ""; display: inline-block; width: 2mm; height: 2mm; margin-right: 1.6mm; background: var(--accent); border: 0.6pt solid var(--ink); vertical-align: -0.2mm; }
+  .status dd { font-size: 9pt; }
+
+  section { margin-top: 4.2mm; }
+  h2 {
+    display: flex; align-items: center; gap: 2mm;
+    font: 700 7.8pt/1 "JetBrains Mono", monospace; letter-spacing: .14em; text-transform: uppercase;
+    margin-bottom: 2mm; break-after: avoid;
+  }
+  h2 .n { color: var(--soft); font-weight: 500; }
+  h2::after { content: ""; flex: 1; height: 0.6pt; background: var(--hair); }
+  p + p { margin-top: 1.4mm; }
+
+  ul { list-style: none; }
+  li { position: relative; padding-left: 3.6mm; }
+  li + li { margin-top: 0.9mm; }
+  li::before { content: ""; position: absolute; left: 0.4mm; top: 0.66em; width: 1.4mm; height: 0.6pt; background: var(--ink); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8.6pt; break-inside: avoid; }
+  caption { caption-side: bottom; text-align: left; font: 400 7.4pt/1.4 "JetBrains Mono", monospace; color: var(--soft); padding-top: 1.2mm; }
+  th { font: 700 7pt/1.3 "JetBrains Mono", monospace; letter-spacing: .08em; text-transform: uppercase; text-align: left; padding: 1.2mm 2mm; border-bottom: 1pt solid var(--ink); }
+  td { padding: 1.1mm 2mm; border-bottom: 0.5pt solid var(--hair); }
+  td.num, th.num { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 8pt; }
+  tr.best td { font-weight: 600; }
+  tr.best td:first-child { box-shadow: inset 1mm 0 0 var(--accent); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; align-items: start; }
+  figure { break-inside: avoid; }
+  figcaption { font: 400 7.4pt/1.4 "JetBrains Mono", monospace; color: var(--soft); margin-top: 1.2mm; }
+  figure svg { display: block; width: 100%; height: auto; }
+  .legend { display: flex; gap: 4mm; font: 400 7.2pt/1 "JetBrains Mono", monospace; margin-top: 1mm; }
+  .legend i { display: inline-block; width: 2.6mm; height: 2.6mm; margin-right: 1.2mm; vertical-align: -0.4mm; border: 0.6pt solid var(--ink); }
+
+  .bars { display: grid; grid-template-columns: 26mm 1fr; gap: 1.6mm 2.4mm; align-items: center; font: 400 7.6pt/1.2 "JetBrains Mono", monospace; }
+  .bar { position: relative; height: 5mm; border-left: 0.8pt solid var(--ink); }
+  .bar span { display: block; height: 100%; border: 0.6pt solid var(--ink); }
+  .bar b { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 1.4mm; font-weight: 700; }
+
+  .callout { border-left: 1.4mm solid var(--accent); padding: 1.6mm 0 1.6mm 3mm; margin-top: 2mm; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); border: 1pt solid var(--ink); margin-top: 2.4mm; break-inside: avoid; }
+  .stats div { padding: 2mm 2.6mm; }
+  .stats div + div { border-left: 0.6pt solid var(--hair); }
+  .stats strong { display: block; font: 400 19pt/1 "Instrument Serif", Georgia, serif; }
+  .stats div:first-child strong { color: var(--ink); box-shadow: inset 0 -2.4mm 0 var(--accent); display: inline-block; }
+  .stats span { font: 400 7.2pt/1.35 "JetBrains Mono", monospace; color: var(--soft); display: block; margin-top: 1mm; }
+
+  .steps { counter-reset: s; }
+  .steps li { counter-increment: s; padding-left: 6mm; }
+  .steps li::before { content: counter(s, decimal-leading-zero); background: none; width: auto; height: auto; top: 0.1em; font: 700 7.4pt/1.4 "JetBrains Mono", monospace; color: var(--accent); }
+
+  .page-break { break-before: page; }
+  footer { margin-top: 5mm; padding-top: 2mm; border-top: 0.6pt solid var(--hair); font: 400 7.2pt/1.5 "JetBrains Mono", monospace; color: var(--soft); }
+</style>
+</head>
+<body>
+
+<header>
+  <p class="kicker">Research progress report &middot; October 2026</p>
+  <h1>Federated IoT <em>Anomaly Detection</em></h1>
+  <div class="meta">
+    <span>Nikhil R &middot; Nishanth Antony</span>
+    <span>B.E. Computer Science &middot; Bangalore Institute of Technology</span>
+  </div>
+</header>
+
+<dl class="status">
+  <dt>Status</dt><dd>Active research project, January 2026 to present. Phase 2 (physical Raspberry Pi client) is in progress.</dd>
+  <dt>Paper</dt><dd>On the way: <i>Federated Autoencoders for Non-IID IoT Anomaly Detection: Protocol Design, Aggregator Comparison, and Stability Analysis</i>. IEEE conference draft written; multi-seed runs under way before submission.</dd>
+</dl>
+
+<section>
+  <h2><span class="n">01</span> The problem</h2>
+  <p>
+    IoT networks are attacked device by device, but the traffic needed to train a detector sits on those devices and is often too sensitive or too heavy to centralise.
+    Federated learning keeps raw traffic local and shares only model weights. The catch is that real devices see very different traffic (non-IID data): a camera sees spoofing, a sensor sees floods, a controller sees probing.
+    We study whether a <b>federated autoencoder trained on benign traffic only</b> can still detect all of these attack families, and which aggregation algorithm stays stable when clients disagree.
+  </p>
+</section>
+
+<section>
+  <h2><span class="n">02</span> Setup</h2>
+  <table>
+    <thead><tr><th>Client</th><th>Device role</th><th>Attack families held out for evaluation</th></tr></thead>
+    <tbody>
+      <tr><td>A</td><td>Camera</td><td>Spoofing</td></tr>
+      <tr><td>B</td><td>Sensor</td><td>DoS / DDoS floods</td></tr>
+      <tr><td>C</td><td>Controller</td><td>Reconnaissance, web attacks, brute force</td></tr>
+    </tbody>
+    <caption>Dataset: CIC IoT-DIAD 2024 (Canadian Institute for Cybersecurity), partitioned by device role to create non-IID clients.</caption>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">03</span> What we built</h2>
+  <figure>
+    <svg viewBox="0 0 520 150" role="img" aria-labelledby="arch-t" font-family="JetBrains Mono, monospace">
+      <title id="arch-t">System diagram: one aggregation server and three Docker clients exchanging model weights over REST.</title>
+      <rect x="150" y="6" width="220" height="50" fill="#F4F1EA" stroke="#111110" stroke-width="1.6"/>
+      <rect x="150" y="6" width="220" height="13" fill="#111110"/>
+      <text x="158" y="15.6" font-size="7.4" fill="#fff" letter-spacing=".8">AGGREGATION SERVER</text>
+      <text x="158" y="31" font-size="7.6" fill="#111110">8 aggregators (FedAvg, FedProx, SCAFFOLD ...)</text>
+      <text x="158" y="42" font-size="7.6" fill="#111110">round sync: stale upload -&gt; HTTP 409</text>
+      <text x="158" y="52" font-size="7.6" fill="#111110">SHA-256 + cosine-similarity audit</text>
+      <g fill="#fff" stroke="#111110" stroke-width="1.4">
+        <rect x="14" y="100" width="150" height="40"/>
+        <rect x="185" y="100" width="150" height="40"/>
+        <rect x="356" y="100" width="150" height="40"/>
+      </g>
+      <g fill="#FF5F00" stroke="#111110" stroke-width="0.8">
+        <rect x="14" y="100" width="8" height="40"/><rect x="185" y="100" width="8" height="40"/><rect x="356" y="100" width="8" height="40"/>
+      </g>
+      <g font-size="7.8" fill="#111110">
+        <text x="28" y="115">CLIENT A &#183; camera</text><text x="28" y="129" fill="#55534C">local benign flows</text>
+        <text x="199" y="115">CLIENT B &#183; sensor</text><text x="199" y="129" fill="#55534C">local benign flows</text>
+        <text x="370" y="115">CLIENT C &#183; controller</text><text x="370" y="129" fill="#55534C">local benign flows</text>
+      </g>
+      <g stroke="#111110" stroke-width="1.1" fill="none">
+        <path d="M89 100 V 80 H 431 V 100"/><path d="M260 100 V 57"/>
+      </g>
+      <text x="266" y="72" font-size="7" fill="#55534C">weights only, over REST</text>
+      <text x="14" y="72" font-size="7" fill="#FF5F00" font-weight="700">raw traffic never leaves a client</text>
+    </svg>
+  </figure>
+  <ul style="margin-top: 2.4mm">
+    <li><b>Benign-only autoencoder.</b> A LayerNorm MLP autoencoder (about 45k parameters) learns to reconstruct normal traffic; a flow is flagged when its reconstruction error exceeds the 90th percentile of benign error. No attack labels are needed for training.</li>
+    <li><b>RFRE identifier encoding.</b> Network identifiers such as IP addresses are encoded by relative frequency rank instead of being dropped, taking the feature space from 34 to 38 dimensions. MinMax scaling is fitted on benign traffic only.</li>
+    <li><b>Real federated protocol, not a single-process simulation.</b> A Dockerised server and three clients talk over REST with round synchronisation (stale uploads are rejected with HTTP 409) and an integrity audit on every update.</li>
+    <li><b>Eight aggregation algorithms</b> behind one interface: FedAvg, FedProx, SCAFFOLD, FedAvgM, FedAdam, FedDyn, FedNova and FedRep, with per-round metrics logged for every client.</li>
+  </ul>
+</section>
+
+<section class="page-break">
+  <h2><span class="n">04</span> Results so far</h2>
+  <table>
+    <thead><tr><th>Aggregator</th><th class="num">Rounds</th><th class="num">Last AUC</th><th class="num">Peak AUC</th><th class="num">Last F1</th><th class="num">Last loss</th></tr></thead>
+    <tbody>
+      <tr class="best"><td>FedProx (&mu; = 0.01)</td><td class="num">17</td><td class="num">0.9825</td><td class="num">0.9825 (r17)</td><td class="num">0.9404</td><td class="num">0.0040</td></tr>
+      <tr><td>FedAvg</td><td class="num">15</td><td class="num">0.9784</td><td class="num">0.9811 (r5)</td><td class="num">0.9396</td><td class="num">0.0024</td></tr>
+      <tr><td>SCAFFOLD</td><td class="num">24</td><td class="num">0.9343</td><td class="num">0.9789 (r1)</td><td class="num">0.9132</td><td class="num">7.87</td></tr>
+    </tbody>
+    <caption>Aggregated detection quality on the 38-D RFRE pipeline. Single-run point estimates; multi-seed runs are in progress.</caption>
+  </table>
+
+  <div class="two" style="margin-top: 4mm">
+    <figure>
+      <svg viewBox="0 0 300 146" role="img" aria-labelledby="pc-t" font-family="JetBrains Mono, monospace">
+        <title id="pc-t">Last-round AUC per client for FedAvg, FedProx and SCAFFOLD.</title>
+        <g stroke="#CFCBBF" stroke-width="0.6">
+          <line x1="34" y1="10" x2="292" y2="10"/><line x1="34" y1="37.5" x2="292" y2="37.5"/>
+          <line x1="34" y1="65" x2="292" y2="65"/><line x1="34" y1="92.5" x2="292" y2="92.5"/>
+        </g>
+        <g font-size="7" fill="#55534C" text-anchor="end">
+          <text x="29" y="12.5">1.00</text><text x="29" y="40">0.95</text><text x="29" y="67.5">0.90</text><text x="29" y="95">0.85</text><text x="29" y="122.5">0.80</text>
+        </g>
+        <g stroke="#111110" stroke-width="0.7">
+          <rect x="45.7" y="35.3" width="18" height="84.7" fill="#8A877E"/>
+          <rect x="67.7" y="29.25" width="18" height="90.75" fill="#FF5F00"/>
+          <rect x="89.7" y="93.6" width="18" height="26.4" fill="#fff"/>
+          <rect x="131" y="10" width="18" height="110" fill="#8A877E"/>
+          <rect x="153" y="10" width="18" height="110" fill="#FF5F00"/>
+          <rect x="175" y="21" width="18" height="99" fill="#fff"/>
+          <rect x="216.3" y="20.45" width="18" height="99.55" fill="#8A877E"/>
+          <rect x="238.3" y="19.35" width="18" height="100.65" fill="#FF5F00"/>
+          <rect x="260.3" y="23.75" width="18" height="96.25" fill="#fff"/>
+        </g>
+        <line x1="34" y1="120" x2="292" y2="120" stroke="#111110" stroke-width="1.2"/>
+        <g font-size="7" fill="#111110" text-anchor="middle">
+          <text x="76.7" y="132">A &#183; camera</text><text x="162" y="132">B &#183; sensor</text><text x="247.3" y="132">C &#183; controller</text>
+        </g>
+        <text x="76.7" y="24" font-size="7" font-weight="700" fill="#111110" text-anchor="middle">0.965</text>
+        <g font-size="6.4" fill="#55534C" text-anchor="middle">
+          <text x="76.7" y="142">spoofing</text><text x="162" y="142">floods</text><text x="247.3" y="142">recon / web / brute</text>
+        </g>
+      </svg>
+      <p class="legend"><span><i style="background:#8A877E"></i>FedAvg</span><span><i style="background:#FF5F00"></i>FedProx</span><span><i style="background:#fff"></i>SCAFFOLD</span></p>
+      <figcaption>Last-round AUC per client. Spoofing on the camera is the hardest case; floods are near-saturated and should not be over-read.</figcaption>
+    </figure>
+
+    <figure>
+      <div class="bars" style="margin-top: 2mm">
+        <span>34-D, no RFRE</span>
+        <div class="bar"><span style="width: 55.5%; background: #8A877E"></span></div>
+        <span>38-D, RFRE</span>
+        <div class="bar"><span style="width: 91.5%; background: #FF5F00"></span></div>
+      </div>
+      <table style="margin-top: 3mm">
+        <thead><tr><th>FedProx</th><th class="num">AUC</th><th class="num">F1</th></tr></thead>
+        <tbody>
+          <tr><td>34-D, identifiers dropped</td><td class="num">0.911</td><td class="num">0.794</td></tr>
+          <tr class="best"><td>38-D, RFRE encoding</td><td class="num">0.983</td><td class="num">0.940</td></tr>
+        </tbody>
+      </table>
+      <figcaption>Ablation: RFRE encoding (axis 0.80 to 1.00). It is the main reason Client A rose from about 0.59 AUC and Client C from about 0.47 in early runs.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">05</span> A negative result we diagnosed</h2>
+  <p>
+    SCAFFOLD matched the others at round 1 (0.979 AUC), then its loss jumped from 0.0062 to 1.20 at round 2 and ended at 7.87.
+    Rather than drop it from the comparison, we traced the cause: with an Adam optimiser on the clients, the control variates SCAFFOLD uses to correct client drift were on the scale of an Adam step, not a gradient.
+  </p>
+  <div class="callout">
+    Measured correction-to-gradient ratio: <b>22.4&times;</b> under Adam versus <b>0.089&times;</b> under SGD. Clamping the correction (the original band-aid) changed nothing.
+    The fix we adopted, SGD with the paper's Option II update and no clamp, tracks FedAvg's loss in a matched smoke test (4.99 vs 4.91).
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">06</span> From simulation to a live detector</h2>
+  <p>
+    The trained FedProx model now runs as a live intrusion detector: packets are captured with Scapy, assembled into flows that mirror the dataset's CICFlowMeter features, and scored in real time, with an attacker console that replays benign traffic and SYN floods.
+    The first live tests did not separate benign from attack traffic. The cause was a domain gap rather than the model: local IPs unseen in training, desktop TCP settings unlike IoT stacks, and a static threshold. We fixed these by injecting deployment IPs into the RFRE table, tuning TCP to IoT-like windows, and calibrating the threshold on a benign warm-up.
+  </p>
+  <div class="stats">
+    <div><strong>100%</strong><span>of about 693 spoofed SYN-flood flows detected in the end-to-end Docker test</span></div>
+    <div><strong>0</strong><span>false alarms on benign HTTP traffic after warm-up calibration</span></div>
+    <div><strong>3.8&times;</strong><span>attack vs benign reconstruction error (0.0365 vs 0.0095)</span></div>
+  </div>
+  <p style="margin-top: 2mm">
+    <b>Phase 2, in progress:</b> a hybrid setup with a physical Raspberry Pi as Client A alongside Docker clients B and C, an overnight matrix of aggregators across three seeds, and on-device measurements of temperature, power and memory.
+  </p>
+</section>
+
+<section>
+  <h2><span class="n">07</span> Road to the paper</h2>
+  <ul class="steps">
+    <li>Re-run all aggregators with a matched round budget and at least three seeds, reporting variance.</li>
+    <li>Per-attack tables (web vs brute force vs reconnaissance) and TPR at a fixed false-positive rate.</li>
+    <li>Model-poisoning experiments against the integrity audit.</li>
+    <li>Ablations of local adaptation, blending and the FedProx &mu;, plus Raspberry Pi edge costs from Phase 2.</li>
+  </ul>
+  <p style="margin-top: 2mm; color: var(--soft)">
+    Stated limits of the current draft: single-seed numbers, unequal round counts, role-based synthetic partitions of a public dataset, and no physical-edge measurements yet. These are the items above.
+  </p>
+</section>
+
+<footer>
+  Prepared October 2026. All figures come from the project's logged experiment metrics and the IEEE draft (August 2026). Results are preliminary and may change in the published version.
+</footer>
+
+</body>
+</html>

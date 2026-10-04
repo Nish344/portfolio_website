@@ -8,13 +8,12 @@
 <meta name="author" content="Nishanth Antony">
 <meta name="theme-color" content="#F2EFE6">
 <meta name="color-scheme" content="light dark">
-<!-- [CONFIRM URL] replace nishanth-antony.pages.dev everywhere once the Cloudflare project exists -->
-<link rel="canonical" href="https://nishanth-antony.pages.dev/">
+<link rel="canonical" href="https://portfolio-website.nishanthantony5.workers.dev/">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://nishanth-antony.pages.dev/">
+<meta property="og:url" content="https://portfolio-website.nishanthantony5.workers.dev/">
 <meta property="og:title" content="Nishanth Antony — AI/ML engineer">
 <meta property="og:description" content="Vision-LLM graders, payment-recovery agents, and the backend underneath. A lab notebook with a working terminal.">
-<meta property="og:image" content="https://nishanth-antony.pages.dev/og-image.png">
+<meta property="og:image" content="https://portfolio-website.nishanthantony5.workers.dev/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -42,7 +41,7 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Nishanth Antony",
-  "url": "https://nishanth-antony.pages.dev/",
+  "url": "https://portfolio-website.nishanthantony5.workers.dev/",
   "email": "mailto:nishanthantony5@gmail.com",
   "jobTitle": "AI/ML Engineer",
   "worksFor": { "@type": "Organization", "name": "Kwilo AI", "url": "https://kwilo.ai" },
@@ -481,14 +480,26 @@ body::after { right: 12px; transform: scaleX(-1); }
 .metric--hot dd { align-self: flex-start; background: var(--accent); color: var(--accent-ink); padding: 2px 6px; margin-left: -6px; }
 .learned { border-left: 2px solid var(--ink); padding-left: var(--s3); font-size: 14px; line-height: 1.6; }
 .learned .k { display: block; margin-bottom: 2px; }
-.links { display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); font-size: 13px; }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s3); font-size: 13px; }
 .links .ph { color: var(--ink-soft); }
-.diagram summary { cursor: pointer; font-size: 12px; list-style: none; display: inline-flex; gap: 6px; align-items: center; }
+.links a, .diagram summary {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 34px; padding: 4px 12px;
+  background: var(--paper); border: var(--border); box-shadow: var(--shadow-sm);
+  font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer;
+  transition: transform var(--ease), box-shadow var(--ease), background var(--ease);
+}
+.links a:hover, .diagram summary:hover { background: var(--paper-2); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.links a:active, .diagram summary:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.links a.is-hot { background: var(--accent); color: var(--accent-ink); }
+.links a.is-hot:hover { background: var(--accent); }
+.diagram summary { list-style: none; padding-left: 4px; }
 .diagram summary::-webkit-details-marker { display: none; }
-.diagram summary::before { content: "+"; display: inline-grid; place-items: center; width: 16px; height: 16px; border: 1px solid var(--ink); font-size: 12px; line-height: 1; }
+.diagram summary::before { content: "+"; display: inline-grid; place-items: center; width: 24px; height: 24px; background: var(--accent); color: var(--accent-ink); border: 1px solid var(--ink); font-size: 16px; line-height: 1; }
+.diagram[open] summary { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); background: var(--paper-2); }
 .diagram[open] summary::before { content: "\2212"; }
 .diagram__fig { margin-top: var(--s3); border: 1px solid var(--ink); background: var(--paper-2); overflow-x: auto; }
 .diagram__fig svg { min-width: 560px; width: 100%; height: auto; color: var(--ink); }
+@media (min-width: 961px) { .diagram__fig svg { min-width: 0; } }
 .diagram__fig figcaption { font-size: 11px; color: var(--ink-soft); padding: 6px var(--s3); border-top: 1px solid var(--hair-strong); letter-spacing: .04em; }
 .svg-hot { fill: var(--accent); }
 .svg-hot-t { fill: var(--accent-ink); }
@@ -747,8 +758,8 @@ body::after { right: 12px; transform: scaleX(-1); }
     <dl class="status">
       <div><dt class="label">location</dt><dd>Bengaluru, IN &middot; UTC+5:30</dd></div>
       <div><dt class="label">availability</dt><dd><span class="status__dot" aria-hidden="true"></span>[OPEN TO: AI/ML ROLES, 2027]</dd></div>
-      <div><dt class="label">current focus</dt><dd>Kwilo AI &middot; Hindi speech emotion</dd></div>
-      <div><dt class="label">last updated</dt><dd><time datetime="2026-10-03">2026-10-03</time></dd></div>
+      <div><dt class="label">current focus</dt><dd>Kwilo AI &middot; federated IoT paper</dd></div>
+      <div><dt class="label">last updated</dt><dd><time datetime="2026-10-04">2026-10-04</time></dd></div>
     </dl>
   </div>
 </section>
@@ -806,7 +817,6 @@ body::after { right: 12px; transform: scaleX(-1); }
               <figcaption>Fig. 02a. One subpart per call in the subparts pipeline; that variant had zero script failures.</figcaption>
             </figure>
           </details>
-          <ul class="links"><li><span class="ph">repo: private (Kwilo)</span></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
           <aside role="note" class="anno anno--l" style="--y: 300px">MAE is in marks, per subpart. 0.855 = usually off by <u>less than one mark</u> -></aside>
         </div>
       </article>
@@ -850,34 +860,14 @@ body::after { right: 12px; transform: scaleX(-1); }
               <figcaption>Fig. 03a. The LLM sits inside "diagnose". It never gets to skip the gate.</figcaption>
             </figure>
           </details>
-          <ul class="links"><li><a href="https://github.com/Nish344/payrecover-agent" target="_blank" rel="noopener">repo -></a></li><li><a href="#">[DEMO VIDEO LINK]</a></li></ul>
+          <ul class="links"><li><a href="https://github.com/Nish344/payrecover-agent" target="_blank" rel="noopener">repo -></a></li><li><a href="https://www.youtube.com/watch?v=ZIid1JJSooE" class="is-hot" target="_blank" rel="noopener">demo video -></a></li></ul>
           <aside role="note" class="anno anno--r" style="--y: 250px">the headline number is <u>rules-only</u>. the LLM gets the ambiguous cases, and the gate gets the LLM</aside>
         </div>
       </article>
 
       <!-- FIG 04 -->
-      <article class="panel panel--lift project project--b" id="p-dataverse" data-slug="dataverse" data-status="RUNNING" aria-labelledby="p-dataverse-t">
-        <div class="panel__bar"><span>Fig. 04 / experiment / 2026</span><span class="tag">[RUNNING]</span></div>
-        <div class="project__body">
-          <p class="project__ctx">DataVerse competition &middot; deadline 12 Oct 2026</p>
-          <h3 class="project__title" id="p-dataverse-t">Hindi speech <em>emotion</em></h3>
-          <p class="kv"><span class="k">problem</span>Tell angry, happy, neutral and sad apart from ~3-second Hindi clips, with 826 labelled examples and a 209-clip public leaderboard worth about &plusmn;3 points of noise.</p>
-          <p class="kv"><span class="k">approach</span>Frozen Whisper-large and w2v-BERT 2.0 layers as features, linear heads, near-duplicate-grouped CV, speed augmentation with TTA, and a bagged greedy ensemble.</p>
-          <ul class="tags"><li>pytorch</li><li>transformers</li><li>scikit-learn</li><li>kaggle T4</li></ul>
-          <dl class="metrics">
-            <div class="metric metric--hot"><dt>3-seed out-of-fold accuracy (ver8)</dt><dd>0.935</dd></div>
-            <div class="metric"><dt>public leaderboard</dt><dd>0.931</dd></div>
-            <div class="metric"><dt>training clips</dt><dd>826</dd></div>
-          </dl>
-          <div class="learned"><span class="k">what I learned</span>The public leaderboard could not see my last three versions; every changed label sat in the private split. Decide on cross-validation, not on the scoreboard. Also: fine-tuning Whisper-large lost to a frozen probe.</div>
-          <ul class="links"><li><a href="#">[REPO LINK, if public]</a></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
-          <aside role="note" class="anno anno--l" style="--y: 220px">footnote 2: it wasn't the learning rate. it was 7 test clips byte-identical to train -></aside>
-        </div>
-      </article>
-
-      <!-- FIG 05 -->
-      <article class="panel panel--lift project project--a" id="p-kwilo" data-slug="kwilo" data-status="IN PROD" aria-labelledby="p-kwilo-t">
-        <div class="panel__bar"><span>Fig. 05 / project / 2026</span><span class="tag">[IN PROD]</span></div>
+      <article class="panel panel--lift project project--b" id="p-kwilo" data-slug="kwilo" data-status="IN PROD" aria-labelledby="p-kwilo-t">
+        <div class="panel__bar"><span>Fig. 04 / project / 2026</span><span class="tag">[IN PROD]</span></div>
         <div class="project__body">
           <p class="project__ctx">Kwilo AI &middot; Apr&ndash;May, Jul 2026&ndash;now</p>
           <h3 class="project__title" id="p-kwilo-t">Shipping on an <em>AI learning platform</em></h3>
@@ -891,13 +881,77 @@ body::after { right: 12px; transform: scaleX(-1); }
           </dl>
           <div class="learned"><span class="k">what I learned</span>A self-reported phone number is not proof of identity, so admitting a student now asks staff before linking a parent account. And lock the row before two payments settle the same installment milliseconds apart.</div>
           <ul class="links"><li><a href="https://kwilo.ai" target="_blank" rel="noopener">kwilo.ai -></a></li><li><span class="ph">code: private</span></li></ul>
-          <aside role="note" class="anno anno--r" style="--y: 230px">every change here shipped with tests. the AI reviewer still found things. <u>humbling</u></aside>
+          <aside role="note" class="anno anno--l" style="--y: 230px">every change here shipped with tests. the AI reviewer still found things. <u>humbling</u> -></aside>
+        </div>
+      </article>
+
+      <!-- FIG 05 -->
+      <article class="panel panel--lift project project--a" id="p-fediot" data-slug="fediot" data-status="RESEARCH" aria-labelledby="p-fediot-t">
+        <div class="panel__bar"><span>Fig. 05 / research / 2026</span><span class="tag">[RESEARCH]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Research project &middot; IoT security &middot; paper on the way</p>
+          <h3 class="project__title" id="p-fediot-t">Federated IoT <em>anomaly detector</em></h3>
+          <p class="kv"><span class="k">problem</span>IoT networks need intrusion detection, but shipping raw traffic from every camera and sensor to one server is a privacy and bandwidth problem.</p>
+          <p class="kv"><span class="k">approach</span>Dockerised federated clients for cameras, sensors and controllers; RFRE preprocessing on IP and port features; FedAvg vs FedProx aggregation benchmarked for stability against spoofing and DDoS.</p>
+          <ul class="tags"><li>python</li><li>pytorch</li><li>docker</li><li>fedprox</li><li>scikit-learn</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>aggregated AUC with FedProx</dt><dd>0.98</dd></div>
+            <div class="metric"><dt>device classes simulated</dt><dd>3</dd></div>
+            <div class="metric"><dt>raw packets leaving a client</dt><dd>0</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>Most of what I called "model instability" was a data-partitioning bug. Check the shards before you tune the optimizer.</div>
+          <ul class="links"><li><a href="fediot-progress.pdf" class="is-hot" target="_blank" rel="noopener">progress report (pdf) -></a></li><li><span class="ph">IEEE paper: in preparation</span></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 230px">0.98 arrived after <u>fixing a bug</u>, not after tuning. it usually does. the paper is on the way</aside>
         </div>
       </article>
 
       <!-- FIG 06 -->
+      <article class="panel panel--lift project project--c" id="p-samudra" data-slug="samudra" data-status="SIH 2025" aria-labelledby="p-samudra-t">
+        <div class="panel__bar"><span>Fig. 06 / hackathon / 2025</span><span class="tag">[SIH 2025]</span></div>
+        <div class="project__body">
+          <p class="project__ctx">Smart India Hackathon 2025 &middot; INCOIS &middot; PS ID25039</p>
+          <h3 class="project__title" id="p-samudra-t">Samudra <em>Prahari</em></h3>
+          <p class="kv"><span class="k">problem</span>When a coastal hazard hits, the network is often the first thing to go, and the reports that do get out are a mix of real sightings, panic and recycled photos.</p>
+          <p class="kv"><span class="k">approach</span>An offline-first app that relays reports over a peer-to-peer BLE mesh, an AI scraper that reads social media, and a dashboard that clusters reports on a PostGIS map. My part: the IndicBERT sentiment pipeline over scraped posts and the image verification module that gives each report a confidence score.</p>
+          <ul class="tags"><li>python</li><li>indicbert</li><li>pytorch</li><li>hugging face</li><li>fastapi</li><li>supabase + postgis</li><li>react native</li></ul>
+          <dl class="metrics">
+            <div class="metric metric--hot"><dt>internet needed to file a report (BLE mesh relay)</dt><dd>0</dd></div>
+            <div class="metric"><dt>pillars: mobile app, AI scraper, web dashboard</dt><dd>3</dd></div>
+            <div class="metric"><dt>AI modules I owned: sentiment, image verification</dt><dd>2</dd></div>
+          </dl>
+          <div class="learned"><span class="k">what I learned</span>Coastal posts mix English, Hindi and regional languages in a single sentence, so an English-only model was never an option. And a report needs a confidence score before it reaches a map that people act on.</div>
+          <details class="diagram">
+            <summary>show the pipeline</summary>
+            <figure class="diagram__fig">
+              <svg viewBox="0 0 640 200" role="img" aria-labelledby="d4t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
+                <title id="d4t">Pipeline: scraped social posts go through IndicBERT sentiment, field reports with photos go through image verification, both feed a confidence score per report, which lands on the PostGIS dashboard</title>
+                <defs><marker id="ah4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
+                <rect x="10" y="18" width="130" height="46"/><rect x="10" y="124" width="130" height="46"/>
+                <rect x="180" y="18" width="130" height="46" class="svg-hot" stroke="currentColor"/><rect x="180" y="124" width="130" height="46" class="svg-hot" stroke="currentColor"/>
+                <rect x="360" y="71" width="120" height="50"/><rect x="520" y="71" width="110" height="50"/>
+                <path d="M140 41H178M140 147H178M480 96H518" marker-end="url(#ah4)"/>
+                <path d="M310 41H335V86H358M310 147H335V106H358" marker-end="url(#ah4)"/>
+                <g fill="currentColor" stroke="none">
+                  <text x="22" y="38">social posts</text><text x="22" y="54" opacity=".7">web scraper</text>
+                  <text x="22" y="144">field report</text><text x="22" y="160" opacity=".7">photo, BLE mesh</text>
+                  <text x="192" y="38" class="svg-hot-t">IndicBERT</text><text x="192" y="54" class="svg-hot-t">sentiment</text>
+                  <text x="192" y="144" class="svg-hot-t">image check</text><text x="192" y="160" class="svg-hot-t">verify the photo</text>
+                  <text x="372" y="92">confidence</text><text x="372" y="108" opacity=".7">score per report</text>
+                  <text x="532" y="92">dashboard</text><text x="532" y="108" opacity=".7">PostGIS map</text>
+                  <text x="10" y="194" opacity=".7">orange: the two modules I built. the rest is my teammates' work</text>
+                </g>
+              </svg>
+              <figcaption>Fig. 06a. Both signals feed one confidence score before a report lands on the map.</figcaption>
+            </figure>
+          </details>
+          <ul class="links"><li><a href="https://github.com/nikhil-r0/samudra-prahari-ecosystem" target="_blank" rel="noopener">source -></a></li><li><a href="https://www.youtube.com/watch?v=5G5odwkGp0A" class="is-hot" target="_blank" rel="noopener">demo video -></a></li></ul>
+          <aside role="note" class="anno anno--l" style="--y: 230px">team of four: Nikhil (lead, BLE mesh), Aryan (frontend), Prajwal (scraper), me (the AI) -></aside>
+        </div>
+      </article>
+
+      <!-- FIG 07 -->
       <article class="panel panel--lift project project--c" id="p-veris" data-slug="veris" data-status="HACKATHON" aria-labelledby="p-veris-t">
-        <div class="panel__bar"><span>Fig. 06 / project / 2025</span><span class="tag">[HACKATHON]</span></div>
+        <div class="panel__bar"><span>Fig. 07 / project / 2025</span><span class="tag">[HACKATHON]</span></div>
         <div class="project__body">
           <p class="project__ctx">Recurzive V2 &middot; Lazy Monks</p>
           <h3 class="project__title" id="p-veris-t">Veris <em>truth engine</em></h3>
@@ -931,31 +985,11 @@ body::after { right: 12px; transform: scaleX(-1); }
                   <text x="552" y="148">reporter</text><text x="600" y="110" opacity=".7">done</text>
                 </g>
               </svg>
-              <figcaption>Fig. 06a. The refiner is the only node allowed to end the loop.</figcaption>
+              <figcaption>Fig. 07a. The refiner is the only node allowed to end the loop.</figcaption>
             </figure>
           </details>
-          <ul class="links"><li><a href="https://github.com/nikhil-r0/veris-ecosystem" target="_blank" rel="noopener">repo -></a></li><li><a href="#">[DEMO VIDEO LINK]</a></li></ul>
-          <aside role="note" class="anno anno--l" style="--y: 230px">TODO: stop over-engineering. (did not, in fact, stop) -></aside>
-        </div>
-      </article>
-
-      <!-- FIG 07 -->
-      <article class="panel panel--lift project project--c" id="p-fediot" data-slug="fediot" data-status="RESEARCH" aria-labelledby="p-fediot-t">
-        <div class="panel__bar"><span>Fig. 07 / research / 2026</span><span class="tag">[RESEARCH]</span></div>
-        <div class="project__body">
-          <p class="project__ctx">Coursework-turned-obsession &middot; IoT security</p>
-          <h3 class="project__title" id="p-fediot-t">Federated IoT <em>anomaly detector</em></h3>
-          <p class="kv"><span class="k">problem</span>IoT networks need intrusion detection, but shipping raw traffic from every camera and sensor to one server is a privacy and bandwidth problem.</p>
-          <p class="kv"><span class="k">approach</span>Dockerised federated clients for cameras, sensors and controllers; RFRE preprocessing on IP and port features; FedAvg vs FedProx aggregation benchmarked for stability against spoofing and DDoS.</p>
-          <ul class="tags"><li>python</li><li>pytorch</li><li>docker</li><li>fedprox</li><li>scikit-learn</li></ul>
-          <dl class="metrics">
-            <div class="metric metric--hot"><dt>aggregated AUC with FedProx</dt><dd>0.98</dd></div>
-            <div class="metric"><dt>device classes simulated</dt><dd>3</dd></div>
-            <div class="metric"><dt>raw packets leaving a client</dt><dd>0</dd></div>
-          </dl>
-          <div class="learned"><span class="k">what I learned</span>Most of what I called "model instability" was a data-partitioning bug. Check the shards before you tune the optimizer.</div>
-          <ul class="links"><li><a href="#">[REPO LINK]</a></li><li><a href="#">[WRITE-UP LINK]</a></li></ul>
-          <aside role="note" class="anno anno--r" style="--y: 230px">0.98 arrived after <u>fixing a bug</u>, not after tuning. it usually does</aside>
+          <ul class="links"><li><a href="https://github.com/nikhil-r0/veris-ecosystem" target="_blank" rel="noopener">repo -></a></li><li><a href="https://www.youtube.com/watch?v=OmviNm0HJbg&amp;t=1s" class="is-hot" target="_blank" rel="noopener">demo video -></a></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 230px">TODO: stop over-engineering. (did not, in fact, stop)</aside>
         </div>
       </article>
 
@@ -1052,7 +1086,7 @@ body::after { right: 12px; transform: scaleX(-1); }
             <div><dt>based in</dt><dd>Bengaluru</dd></div>
             <div><dt>graduating</dt><dd>Jul 2027</dd></div>
             <div><dt>CGPA</dt><dd>8.50 / 10</dd></div>
-            <div><dt>LeetCode</dt><dd>290 (98 med, 12 hard)</dd></div>
+            <div><dt>LeetCode</dt><dd>290</dd></div>
             <div><dt>TryHackMe</dt><dd>top 2%</dd></div>
             <div><dt>certs</dt><dd>OCI GenAI Pro, APIsec ACP</dd></div>
           </dl>
@@ -1153,11 +1187,11 @@ body::after { right: 12px; transform: scaleX(-1); }
       <p><strong>Colophon.</strong> Set in Instrument Serif and JetBrains Mono. One hand-written HTML file: no framework, no template, no tracking, no cookies.</p>
     </div>
     <div class="footer__col">
-      <p>Hosted on Cloudflare Pages. The orange is #FF5F00 and it is rationed.</p>
+      <p>Hosted on Cloudflare. The orange is #FF5F00 and it is rationed.</p>
       <p>&copy; 2026 Nishanth Antony.</p>
     </div>
     <div class="footer__col footer__col--r">
-      <p>last updated <time datetime="2026-10-03">2026-10-03</time></p>
+      <p>last updated <time datetime="2026-10-04">2026-10-04</time></p>
       <p><a href="#top">cd ~</a></p>
     </div>
   </div>
@@ -1238,14 +1272,14 @@ body::after { right: 12px; transform: scaleX(-1); }
     ['2025-05', 'OpenCV', 'Green Quest: verifying that the adopted plant actually got watered.'],
     ['2025-07', 'Burp Suite, nmap, sqlmap', '100+ CTF boxes during the REINFOSEC security internship.', 'cat resume'],
     ['2025-09', 'LangGraph', 'making Veris investigate a claim instead of autocompleting one.', 'open veris'],
-    ['2025-09', 'IndicBERT + PostGIS', 'Samudra Prahari at SIH 2025: coastal hazard reports on a live map.'],
+    ['2025-09', 'IndicBERT + PyTorch', 'Samudra Prahari at SIH 2025: sentiment and image checks on coastal hazard reports.', 'open samudra'],
     ['2025-10', 'Solidity', 'Sauda, a community marketplace for buying, selling and barter.'],
     ['2025-12', 'Spring Boot', 'e-commerce APIs at Goloka IT. responses got 25-35% faster.', 'cat resume'],
     ['2026-04', 'vision LLMs + eval harness', 'grading handwritten scripts against teachers at Kwilo. 0.855 MAE.', 'open grader'],
     ['2026-07', 'Prisma', 'an asset registry and allocation state machine in 8 hours (AssetFlow).', 'cd notebook'],
     ['2026-08', 'Razorpay API', 'PayRecover: chasing failed payments without spamming anyone.', 'open payrecover'],
     ['2026-09', 'MediaPipe + ESP32 servos', 'aiming a water gun at faces. it misses less now.', 'cd notebook'],
-    ['2026-09', 'Whisper / w2v-BERT probing', 'hearing emotion in 826 Hindi clips. 0.93 OOF so far.', 'open dataverse'],
+    ['2026-09', 'Whisper / w2v-BERT probing', 'hearing emotion in 826 Hindi clips. 0.93 OOF so far.', 'cd notebook'],
     ['2026-10', 'Postgres row-level security', "because one school's fees are not another school's business. Kwilo admissions and fees.", 'open kwilo'],
   ];
   const track = $('#ledger-track'), detail = $('#ledger-detail'), goSlot = $('#ledger-go');
