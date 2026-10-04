@@ -4,3 +4,7 @@ Resources/
 .wrangler/
 node_modules/
 .DS_Store
+
+# demo video renders
+tools/video/out/
+tools/video/frames/
