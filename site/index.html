@@ -511,9 +511,23 @@ body::after { right: 12px; transform: scaleX(-1); }
 }
 
 /* ---------- Notebook (lab log) ---------- */
+/* Viewport shows ~10 rows; older entries stay reachable by scroll. */
+.log-scroll {
+  max-height: calc(10 * 52px + 36px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  mask-image: linear-gradient(to bottom, #000 0, #000 calc(100% - 28px), transparent 100%);
+}
+.log-scroll:hover,
+.log-scroll:focus-within { mask-image: none; }
 .log { width: 100%; border-collapse: collapse; font-size: 13px; }
 .log caption { text-align: left; }
-.log th { text-align: left; font-weight: 400; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); padding: var(--s2) var(--s4); border-bottom: 1px solid var(--ink); }
+.log th {
+  text-align: left; font-weight: 400; font-size: 11px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-soft); padding: var(--s2) var(--s4); border-bottom: 1px solid var(--ink);
+  position: sticky; top: 0; z-index: 1; background: var(--paper);
+}
 .log td { padding: 10px var(--s4); border-bottom: 1px solid var(--hair); vertical-align: top; }
 .log tr:last-child td { border-bottom: 0; }
 .log tbody tr:hover { background: var(--paper-2); }
@@ -522,6 +536,7 @@ body::after { right: 12px; transform: scaleX(-1); }
 .log__tag span { display: inline-block; font-size: 10px; letter-spacing: .06em; padding: 1px 5px; border: 1px solid var(--ink); }
 .log__res { color: var(--ink-soft); }
 @media (max-width: 720px) {
+  .log-scroll { max-height: calc(10 * 88px); mask-image: none; }
   .log thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .log tr { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--s3); padding: var(--s3) var(--s4); border-bottom: 1px solid var(--hair); }
   .log td { display: block; padding: 0; border: 0; }
@@ -697,7 +712,7 @@ body::after { right: 12px; transform: scaleX(-1); }
       <section class="panel ledger has-anno" aria-labelledby="ledger-title">
         <div class="panel__bar"><span id="ledger-title">Fig. 00b / learning ledger</span><span class="tag">[SINCE 2024]</span></div>
         <div class="ledger__body">
-          <p class="ledger__meta">every stack I picked up because something had to ship. 16 in two years, about one every six weeks.</p>
+          <p class="ledger__meta">every stack I picked up because something had to ship. 18 in two years, about one every six weeks.</p>
           <div class="ledger__track" id="ledger-track" role="group" aria-label="Timeline, October 2024 to October 2026. Arrow keys move between entries.">
             <span class="ledger__yr" style="left: 14%" aria-hidden="true">2025</span>
             <span class="ledger__yr" style="left: 62%" aria-hidden="true">2026</span>
@@ -758,8 +773,8 @@ body::after { right: 12px; transform: scaleX(-1); }
     <dl class="status">
       <div><dt class="label">location</dt><dd>Bengaluru, IN &middot; UTC+5:30</dd></div>
       <div><dt class="label">availability</dt><dd><span class="status__dot" aria-hidden="true"></span>[OPEN TO: AI/ML ROLES, 2027]</dd></div>
-      <div><dt class="label">current focus</dt><dd>Kwilo AI &middot; federated IoT paper</dd></div>
-      <div><dt class="label">last updated</dt><dd><time datetime="2026-10-04">2026-10-04</time></dd></div>
+      <div><dt class="label">current focus</dt><dd>Kwilo AI &middot; open-aiops &middot; Dhatri</dd></div>
+      <div><dt class="label">last updated</dt><dd><time datetime="2026-10-14">2026-10-14</time></dd></div>
     </dl>
   </div>
 </section>
@@ -866,7 +881,7 @@ body::after { right: 12px; transform: scaleX(-1); }
       </article>
 
       <!-- FIG 04 -->
-      <article class="panel panel--lift project project--b" id="p-kwilo" data-slug="kwilo" data-status="IN PROD" aria-labelledby="p-kwilo-t">
+      <article class="panel panel--lift project project--a" id="p-kwilo" data-slug="kwilo" data-status="IN PROD" aria-labelledby="p-kwilo-t">
         <div class="panel__bar"><span>Fig. 04 / project / 2026</span><span class="tag">[IN PROD]</span></div>
         <div class="project__body">
           <p class="project__ctx">Kwilo AI &middot; Apr&ndash;May, Jul 2026&ndash;now</p>
@@ -886,7 +901,7 @@ body::after { right: 12px; transform: scaleX(-1); }
       </article>
 
       <!-- FIG 05 -->
-      <article class="panel panel--lift project project--a" id="p-fediot" data-slug="fediot" data-status="RESEARCH" aria-labelledby="p-fediot-t">
+      <article class="panel panel--lift project project--b" id="p-fediot" data-slug="fediot" data-status="RESEARCH" aria-labelledby="p-fediot-t">
         <div class="panel__bar"><span>Fig. 05 / research / 2026</span><span class="tag">[RESEARCH]</span></div>
         <div class="project__body">
           <p class="project__ctx">Research project &middot; IoT security &middot; paper on the way</p>
@@ -906,92 +921,46 @@ body::after { right: 12px; transform: scaleX(-1); }
       </article>
 
       <!-- FIG 06 -->
-      <article class="panel panel--lift project project--c" id="p-samudra" data-slug="samudra" data-status="SIH 2025" aria-labelledby="p-samudra-t">
-        <div class="panel__bar"><span>Fig. 06 / hackathon / 2025</span><span class="tag">[SIH 2025]</span></div>
+      <article class="panel panel--lift project project--c" id="p-openaiops" data-slug="openaiops" data-status="OSS" aria-labelledby="p-openaiops-t">
+        <div class="panel__bar"><span>Fig. 06 / open source / 2026</span><span class="tag">[OSS]</span></div>
         <div class="project__body">
-          <p class="project__ctx">Smart India Hackathon 2025 &middot; INCOIS &middot; PS ID25039</p>
-          <h3 class="project__title" id="p-samudra-t">Samudra <em>Prahari</em></h3>
-          <p class="kv"><span class="k">problem</span>When a coastal hazard hits, the network is often the first thing to go, and the reports that do get out are a mix of real sightings, panic and recycled photos.</p>
-          <p class="kv"><span class="k">approach</span>An offline-first app that relays reports over a peer-to-peer BLE mesh, an AI scraper that reads social media, and a dashboard that clusters reports on a PostGIS map. My part: the IndicBERT sentiment pipeline over scraped posts and the image verification module that gives each report a confidence score.</p>
-          <ul class="tags"><li>python</li><li>indicbert</li><li>pytorch</li><li>hugging face</li><li>fastapi</li><li>supabase + postgis</li><li>react native</li></ul>
+          <p class="project__ctx">Intervues Club &middot; open-aiops cohort &middot; Apache-2.0</p>
+          <h3 class="project__title" id="p-openaiops-t">open-aiops <em>governance</em></h3>
+          <p class="kv"><span class="k">problem</span>Enterprise LLM apps die on a single provider outage or a 429. Callers shouldn't rewrite code every time a model flakes.</p>
+          <p class="kv"><span class="k">approach</span>I own <code>governance/</code> in the open-source AI ops control plane: a model router that ranks providers by cost, latency and overload, walks a ranked list for failover on rate limits and timeouts, and retries with exponential backoff plus full jitter. Public PRs, reviewed by someone else.</p>
+          <ul class="tags"><li>python</li><li>pydantic</li><li>fastapi</li><li>pytest</li><li>circuit / failover</li><li>open source</li></ul>
           <dl class="metrics">
-            <div class="metric metric--hot"><dt>internet needed to file a report (BLE mesh relay)</dt><dd>0</dd></div>
-            <div class="metric"><dt>pillars: mobile app, AI scraper, web dashboard</dt><dd>3</dd></div>
-            <div class="metric"><dt>AI modules I owned: sentiment, image verification</dt><dd>2</dd></div>
+            <div class="metric metric--hot"><dt>merged PRs I own on governance</dt><dd>4+</dd></div>
+            <div class="metric"><dt>modules: router, failover, retry, config import</dt><dd>4</dd></div>
+            <div class="metric"><dt>real API keys in CI</dt><dd>0</dd></div>
           </dl>
-          <div class="learned"><span class="k">what I learned</span>Coastal posts mix English, Hindi and regional languages in a single sentence, so an English-only model was never an option. And a report needs a confidence score before it reaches a map that people act on.</div>
-          <details class="diagram">
-            <summary>show the pipeline</summary>
-            <figure class="diagram__fig">
-              <svg viewBox="0 0 640 200" role="img" aria-labelledby="d4t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
-                <title id="d4t">Pipeline: scraped social posts go through IndicBERT sentiment, field reports with photos go through image verification, both feed a confidence score per report, which lands on the PostGIS dashboard</title>
-                <defs><marker id="ah4" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
-                <rect x="10" y="18" width="130" height="46"/><rect x="10" y="124" width="130" height="46"/>
-                <rect x="180" y="18" width="130" height="46" class="svg-hot" stroke="currentColor"/><rect x="180" y="124" width="130" height="46" class="svg-hot" stroke="currentColor"/>
-                <rect x="360" y="71" width="120" height="50"/><rect x="520" y="71" width="110" height="50"/>
-                <path d="M140 41H178M140 147H178M480 96H518" marker-end="url(#ah4)"/>
-                <path d="M310 41H335V86H358M310 147H335V106H358" marker-end="url(#ah4)"/>
-                <g fill="currentColor" stroke="none">
-                  <text x="22" y="38">social posts</text><text x="22" y="54" opacity=".7">web scraper</text>
-                  <text x="22" y="144">field report</text><text x="22" y="160" opacity=".7">photo, BLE mesh</text>
-                  <text x="192" y="38" class="svg-hot-t">IndicBERT</text><text x="192" y="54" class="svg-hot-t">sentiment</text>
-                  <text x="192" y="144" class="svg-hot-t">image check</text><text x="192" y="160" class="svg-hot-t">verify the photo</text>
-                  <text x="372" y="92">confidence</text><text x="372" y="108" opacity=".7">score per report</text>
-                  <text x="532" y="92">dashboard</text><text x="532" y="108" opacity=".7">PostGIS map</text>
-                  <text x="10" y="194" opacity=".7">orange: the two modules I built. the rest is my teammates' work</text>
-                </g>
-              </svg>
-              <figcaption>Fig. 06a. Both signals feed one confidence score before a report lands on the map.</figcaption>
-            </figure>
-          </details>
-          <ul class="links"><li><a href="https://github.com/nikhil-r0/samudra-prahari-ecosystem" target="_blank" rel="noopener">source -></a></li><li><a href="https://www.youtube.com/watch?v=5G5odwkGp0A" class="is-hot" target="_blank" rel="noopener">demo video -></a></li></ul>
-          <aside role="note" class="anno anno--l" style="--y: 230px">team of four: Nikhil (lead, BLE mesh), Aryan (frontend), Prajwal (scraper), me (the AI) -></aside>
+          <div class="learned"><span class="k">what I learned</span>Per-request fallback must walk a ranked decision list. Marking a provider "overloaded" on shared router state would poison other in-flight requests. Small PRs with fake providers beat one giant "add LiteLLM" dump.</div>
+          <ul class="links"><li><a href="https://github.com/SupriyankaKharade/open-aiops" class="is-hot" target="_blank" rel="noopener">upstream repo -></a></li><li><a href="https://community.intervues.club/projects/open-aiops-i9my" target="_blank" rel="noopener">cohort -></a></li></ul>
+          <aside role="note" class="anno anno--l" style="--y: 220px">the gap this fills: public PRs reviewed by someone who isn't me</aside>
         </div>
       </article>
 
       <!-- FIG 07 -->
-      <article class="panel panel--lift project project--c" id="p-veris" data-slug="veris" data-status="HACKATHON" aria-labelledby="p-veris-t">
-        <div class="panel__bar"><span>Fig. 07 / project / 2025</span><span class="tag">[HACKATHON]</span></div>
+      <article class="panel panel--lift project project--c" id="p-dhatri" data-slug="dhatri" data-status="HACKATHON" aria-labelledby="p-dhatri-t">
+        <div class="panel__bar"><span>Fig. 07 / hackathon / 2026</span><span class="tag">[SERVERPOD]</span></div>
         <div class="project__body">
-          <p class="project__ctx">Recurzive V2 &middot; Lazy Monks</p>
-          <h3 class="project__title" id="p-veris-t">Veris <em>truth engine</em></h3>
-          <p class="kv"><span class="k">problem</span>Claims spread faster than anyone can check who started them or who is amplifying them.</p>
-          <p class="kv"><span class="k">approach</span>A LangGraph state machine: a collector picks a tool and gathers evidence, a verifier scores each item, a graph node maps authors and mentions, and a refiner decides whether to dig deeper or stop.</p>
-          <ul class="tags"><li>python</li><li>langgraph</li><li>pydantic</li><li>fastapi</li><li>next.js</li></ul>
+          <p class="project__ctx">Serverpod hackathon &middot; Lazy Monks &middot; in progress</p>
+          <h3 class="project__title" id="p-dhatri-t">Dhātrī <em>care companion</em></h3>
+          <p class="kv"><span class="k">problem</span>Elders in India manage chronic meds while adult children live elsewhere. A missed dose at 8 PM shouldn't wait for the next family call.</p>
+          <p class="kv"><span class="k">approach</span>Flutter app (patient / caregiver / doctor) on a Serverpod backend: prescription photo → Gemini draft schedule → human confirm → Future Calls for reminders and escalation → live caregiver alerts over WebSockets → Hindi voice check-ins (Sarvam STT/TTS) with pgvector patient memory.</p>
+          <ul class="tags"><li>serverpod</li><li>dart</li><li>flutter</li><li>postgres + pgvector</li><li>gemini</li><li>sarvam</li><li>websockets</li></ul>
           <dl class="metrics">
-            <div class="metric"><dt>graph nodes in the loop</dt><dd>5</dd></div>
-            <div class="metric metric--hot"><dt>trust score per evidence item</dt><dd>0&ndash;1</dd></div>
-            <div class="metric"><dt>apps: agent API + Next.js UI</dt><dd>2</dd></div>
+            <div class="metric metric--hot"><dt>roles on one typed client</dt><dd>3</dd></div>
+            <div class="metric"><dt>AI smoke gates (extract + STT) green</dt><dd>5/5</dd></div>
+            <div class="metric"><dt>prescriptions activated without caregiver review</dt><dd>0</dd></div>
           </dl>
-          <div class="learned"><span class="k">what I learned</span>An agent loop needs an explicit stopping rule and a typed shared state before it needs a better model. Pydantic on every edge is what kept the demo alive.</div>
-          <details class="diagram">
-            <summary>show the graph</summary>
-            <figure class="diagram__fig">
-              <svg viewBox="0 0 640 180" role="img" aria-labelledby="d3t" font-family="JetBrains Mono, monospace" font-size="11" fill="none" stroke="currentColor" stroke-width="1.5">
-                <title id="d3t">Graph: query to collector, verifier, graph builder, refiner; refiner loops back to collector with a new query or ends at the reporter</title>
-                <defs><marker id="ah3" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="currentColor" stroke="none"/></marker></defs>
-                <rect x="10" y="44" width="80" height="46"/><rect x="125" y="44" width="105" height="46"/><rect x="265" y="44" width="105" height="46"/>
-                <rect x="405" y="44" width="100" height="46"/><rect x="540" y="44" width="90" height="46" class="svg-hot" stroke="currentColor"/>
-                <rect x="540" y="124" width="90" height="40"/>
-                <path d="M90 67H123M230 67H263M370 67H403M505 67H538M585 90V122" marker-end="url(#ah3)"/>
-                <path d="M585 44V20H178V42" marker-end="url(#ah3)"/>
-                <g fill="currentColor" stroke="none">
-                  <text x="380" y="14" text-anchor="middle" opacity=".7">next_query</text>
-                  <text x="22" y="72">query</text>
-                  <text x="137" y="63">collector</text><text x="137" y="79" opacity=".7">picks a tool</text>
-                  <text x="277" y="63">verifier</text><text x="277" y="79" opacity=".7">trust 0-1</text>
-                  <text x="417" y="63">graph</text><text x="417" y="79" opacity=".7">who said it</text>
-                  <text x="552" y="63" class="svg-hot-t">refiner</text><text x="552" y="79" class="svg-hot-t">dig / stop</text>
-                  <text x="552" y="148">reporter</text><text x="600" y="110" opacity=".7">done</text>
-                </g>
-              </svg>
-              <figcaption>Fig. 07a. The refiner is the only node allowed to end the loop.</figcaption>
-            </figure>
-          </details>
-          <ul class="links"><li><a href="https://github.com/nikhil-r0/veris-ecosystem" target="_blank" rel="noopener">repo -></a></li><li><a href="https://www.youtube.com/watch?v=OmviNm0HJbg&amp;t=1s" class="is-hot" target="_blank" rel="noopener">demo video -></a></li></ul>
-          <aside role="note" class="anno anno--r" style="--y: 230px">TODO: stop over-engineering. (did not, in fact, stop)</aside>
+          <div class="learned"><span class="k">what I learned</span>Serverpod's auth, Future Calls, streams and pgvector map almost 1:1 to a care loop. The rule that kept the demo alive: mutate Postgres, then post a <code>CareUpdate</code>. AI drafts; humans confirm.</div>
+          <ul class="links"><li><a href="https://github.com/Nish344/Dhatri" class="is-hot" target="_blank" rel="noopener">repo -></a></li><li><span class="ph">hackathon build: shipping</span></li></ul>
+          <aside role="note" class="anno anno--r" style="--y: 240px">Hindi first. English-only voice stacks mishear Indian accents and sound foreign -></aside>
         </div>
       </article>
+
+
 
     </div>
   </div>
@@ -1007,11 +976,14 @@ body::after { right: 12px; transform: scaleX(-1); }
     </header>
 
     <div class="panel has-anno">
-      <div class="panel__bar"><span>Fig. 08 / notebook.log</span><span class="tag">[APPEND-ONLY]</span></div>
+      <div class="panel__bar"><span>Fig. 10 / notebook.log</span><span class="tag">[SCROLL &middot; 16]</span></div>
+      <div class="log-scroll" tabindex="0" aria-label="Lab log, scroll for older entries">
       <table class="log">
-        <caption class="sr-only">Lab log of experiments and builds, newest first</caption>
+        <caption class="sr-only">Lab log of experiments and builds, newest first. About ten rows visible; scroll for the rest.</caption>
         <thead><tr><th scope="col">date</th><th scope="col">entry</th><th scope="col">tag</th><th scope="col">result</th></tr></thead>
         <tbody>
+          <tr><td class="log__date">2026-10</td><td class="log__entry">Dhātrī, Serverpod care companion</td><td class="log__tag"><span>HACK</span></td><td class="log__res">BE + AI final-ready: Future Calls, CareUpdate stream, Sarvam Hindi voice, pgvector memory. Flutter wiring next.</td></tr>
+          <tr><td class="log__date">2026-10</td><td class="log__entry">open-aiops governance (Intervues Club)</td><td class="log__tag"><span>OSS</span></td><td class="log__res">router, failover, retry with full jitter. public PRs merged into SupriyankaKharade/open-aiops.</td></tr>
           <tr><td class="log__date">2026-10</td><td class="log__entry">w2v-BERT 2.0 vs Whisper-large encoders</td><td class="log__tag"><span>ML</span></td><td class="log__res">OOF 0.9346, best so far. public LB didn't move; the changes landed in the private split.</td></tr>
           <tr><td class="log__date">2026-09</td><td class="log__entry">Fine-tuning Whisper-large on 826 clips</td><td class="log__tag"><span>ML</span></td><td class="log__res">lost to a frozen probe, 0.904 vs 0.925. overfits by epoch 5.</td></tr>
           <tr><td class="log__date">2026-09</td><td class="log__entry">Face-tracking water gun</td><td class="log__tag"><span>IOT</span></td><td class="log__res">MediaPipe face centre to pan/tilt angles to two ESP32 servos. shoot is still a stub.</td></tr>
@@ -1028,7 +1000,8 @@ body::after { right: 12px; transform: scaleX(-1); }
           <tr><td class="log__date">2024-10</td><td class="log__entry">Green Terrace, BuzzOnEarth @ IIT Kanpur</td><td class="log__tag"><span>HACK</span></td><td class="log__res">3rd place. first podium, first all-nighter that paid off.</td></tr>
         </tbody>
       </table>
-      <aside role="note" class="anno anno--r" style="--y: 120px">two rows here are things that <u>didn't work</u>. those taught me the most</aside>
+      </div>
+      <aside role="note" class="anno anno--r" style="--y: 120px">scroll for the rest. two rows are things that <u>didn't work</u></aside>
     </div>
   </div>
 </section>
@@ -1064,7 +1037,8 @@ body::after { right: 12px; transform: scaleX(-1); }
           <h3><span class="md">## </span>currently</h3>
           <ul>
             <li>shipping ERP and AI features at Kwilo</li>
-            <li>squeezing emotion out of 826 Hindi clips before 12 Oct</li>
+            <li>open-source contributor on <a href="https://github.com/SupriyankaKharade/open-aiops" target="_blank" rel="noopener">open-aiops</a> (Intervues Club): LLM provider routing, failover, retries</li>
+            <li>building <a href="https://github.com/Nish344/Dhatri" target="_blank" rel="noopener">Dhātrī</a> for a Serverpod hackathon: Hindi voice care companion for elders</li>
             <li>290 LeetCode problems in, 253 of them in Java</li>
           </ul>
 
@@ -1106,7 +1080,7 @@ body::after { right: 12px; transform: scaleX(-1); }
     </header>
 
     <div class="panel has-anno">
-      <div class="panel__bar"><span>Fig. 09 / skills.txt</span><span class="tag">[SELF-REPORTED]</span></div>
+      <div class="panel__bar"><span>Fig. 11 / skills.txt</span><span class="tag">[SELF-REPORTED]</span></div>
       <table class="matrix" id="skills-matrix">
         <caption class="sr-only">Skills by domain and how often I use them</caption>
         <colgroup><col class="c-key"><col><col><col></colgroup>
@@ -1120,19 +1094,19 @@ body::after { right: 12px; transform: scaleX(-1); }
         </thead>
         <tbody>
           <tr><th scope="row">LLMs &amp; agents</th>
-            <td data-level="daily"><ul><li>few-shot prompt design</li><li>Gemini on Vertex AI</li><li>Azure OpenAI</li><li>eval harnesses</li></ul></td>
-            <td data-level="comfortable"><ul><li>LangGraph</li><li>LangChain</li><li>RAG with pgvector</li><li>AWS Bedrock</li><li>multi-agent loops</li></ul></td>
-            <td data-level="dabbling"><ul><li>Sarvam AI</li><li>Claude API</li></ul></td></tr>
+            <td data-level="daily"><ul><li>few-shot prompt design</li><li>Gemini on Vertex AI</li><li>Azure OpenAI</li><li>eval harnesses</li><li>Sarvam STT/TTS</li></ul></td>
+            <td data-level="comfortable"><ul><li>LangGraph</li><li>LangChain</li><li>RAG with pgvector</li><li>AWS Bedrock</li><li>multi-agent loops</li><li>provider failover / retry</li></ul></td>
+            <td data-level="dabbling"><ul><li>Claude API</li></ul></td></tr>
           <tr><th scope="row">Models &amp; data</th>
             <td data-level="daily"><ul><li>pandas</li><li>NumPy</li></ul></td>
             <td data-level="comfortable"><ul><li>PyTorch</li><li>scikit-learn</li><li>Whisper / w2v-BERT probing</li><li>matplotlib</li></ul></td>
             <td data-level="dabbling"><ul><li>TensorFlow</li><li>OpenCV</li><li>MediaPipe</li><li>federated learning</li></ul></td></tr>
           <tr><th scope="row">Backend</th>
-            <td data-level="daily"><ul><li>FastAPI</li><li>SQLAlchemy async</li><li>PostgreSQL</li><li>Alembic</li><li>pytest</li></ul></td>
+            <td data-level="daily"><ul><li>FastAPI</li><li>SQLAlchemy async</li><li>PostgreSQL</li><li>Alembic</li><li>pytest</li><li>Serverpod</li></ul></td>
             <td data-level="comfortable"><ul><li>Flask</li><li>Spring Boot</li><li>REST</li><li>WebSockets</li><li>Postgres RLS</li></ul></td>
             <td data-level="dabbling"><ul><li>Supabase</li><li>Firebase</li><li>Prisma</li></ul></td></tr>
           <tr><th scope="row">Frontend</th>
-            <td data-level="daily"><ul><li>React</li><li>TanStack Query</li></ul></td>
+            <td data-level="daily"><ul><li>React</li><li>TanStack Query</li><li>Flutter</li></ul></td>
             <td data-level="comfortable"><ul><li>Tailwind</li><li>Vite</li><li>React Native (Expo)</li><li>vitest</li></ul></td>
             <td data-level="dabbling"><ul><li>Next.js</li><li>Phaser</li></ul></td></tr>
           <tr><th scope="row">MLOps &amp; cloud</th>
@@ -1140,7 +1114,7 @@ body::after { right: 12px; transform: scaleX(-1); }
             <td data-level="comfortable"><ul><li>GCP Cloud Run + GCS</li><li>Kaggle GPU pipelines</li><li>uv</li></ul></td>
             <td data-level="dabbling"><ul><li>Azure Container Apps</li><li>AWS EC2 / S3</li><li>Cloudflare</li></ul></td></tr>
           <tr><th scope="row">Languages</th>
-            <td data-level="daily"><ul><li>Python</li><li>TypeScript</li></ul></td>
+            <td data-level="daily"><ul><li>Python</li><li>TypeScript</li><li>Dart</li></ul></td>
             <td data-level="comfortable"><ul><li>Java</li><li>SQL</li><li>Bash</li></ul></td>
             <td data-level="dabbling"><ul><li>C</li><li>C++</li><li>Rust (Soroban)</li></ul></td></tr>
           <tr><th scope="row">Security</th>
@@ -1158,7 +1132,7 @@ body::after { right: 12px; transform: scaleX(-1); }
 <section class="sec" id="contact" aria-labelledby="contact-title" tabindex="-1">
   <div class="wrap">
     <div class="panel contact has-anno">
-      <div class="panel__bar"><span>Fig. 10 / contact</span><span class="tag">[OPEN]</span></div>
+      <div class="panel__bar"><span>Fig. 12 / contact</span><span class="tag">[OPEN]</span></div>
       <div class="contact__body">
         <h2 class="contact__title" id="contact-title">Got a problem that has to <em>work</em>?</h2>
         <dl class="contact__list">
@@ -1191,7 +1165,7 @@ body::after { right: 12px; transform: scaleX(-1); }
       <p>&copy; 2026 Nishanth Antony.</p>
     </div>
     <div class="footer__col footer__col--r">
-      <p>last updated <time datetime="2026-10-04">2026-10-04</time></p>
+      <p>last updated <time datetime="2026-10-14">2026-10-14</time></p>
       <p><a href="#top">cd ~</a></p>
     </div>
   </div>
@@ -1271,8 +1245,8 @@ body::after { right: 12px; transform: scaleX(-1); }
     ['2025-05', 'Phaser + WebSockets', 'GameNest, a 2D world where people build games together.'],
     ['2025-05', 'OpenCV', 'Green Quest: verifying that the adopted plant actually got watered.'],
     ['2025-07', 'Burp Suite, nmap, sqlmap', '100+ CTF boxes during the REINFOSEC security internship.', 'cat resume'],
-    ['2025-09', 'LangGraph', 'making Veris investigate a claim instead of autocompleting one.', 'open veris'],
-    ['2025-09', 'IndicBERT + PyTorch', 'Samudra Prahari at SIH 2025: sentiment and image checks on coastal hazard reports.', 'open samudra'],
+    ['2025-09', 'LangGraph', 'making Veris investigate a claim instead of autocompleting one.', 'cd notebook'],
+    ['2025-09', 'IndicBERT + PyTorch', 'Samudra Prahari at SIH 2025: sentiment and image checks on coastal hazard reports.', 'cd notebook'],
     ['2025-10', 'Solidity', 'Sauda, a community marketplace for buying, selling and barter.'],
     ['2025-12', 'Spring Boot', 'e-commerce APIs at Goloka IT. responses got 25-35% faster.', 'cat resume'],
     ['2026-04', 'vision LLMs + eval harness', 'grading handwritten scripts against teachers at Kwilo. 0.855 MAE.', 'open grader'],
@@ -1281,6 +1255,8 @@ body::after { right: 12px; transform: scaleX(-1); }
     ['2026-09', 'MediaPipe + ESP32 servos', 'aiming a water gun at faces. it misses less now.', 'cd notebook'],
     ['2026-09', 'Whisper / w2v-BERT probing', 'hearing emotion in 826 Hindi clips. 0.93 OOF so far.', 'cd notebook'],
     ['2026-10', 'Postgres row-level security', "because one school's fees are not another school's business. Kwilo admissions and fees.", 'open kwilo'],
+    ['2026-10', 'open-aiops (Python)', 'public PRs: LLM router, failover, retry with full jitter. Intervues Club cohort.', 'open openaiops'],
+    ['2026-10', 'Serverpod + Flutter + Sarvam', 'Dhātrī: Hindi voice care companion for elders. mutate Postgres, then CareUpdate.', 'open dhatri'],
   ];
   const track = $('#ledger-track'), detail = $('#ledger-detail'), goSlot = $('#ledger-go');
   const month = (d) => { const [y, m] = d.split('-').map(Number); return (y - 2024) * 12 + m - 10; };
@@ -1444,7 +1420,7 @@ body::after { right: 12px; transform: scaleX(-1); }
       const t = (a[0] || '').replace(/\/$/, '');
       if (!t) return [FILES.flatMap(([f, c]) => [C(c, f), '  '])];
       if (t === 'projects' || t === 'work') return projects.map((p) => ['  ', C('open ' + p.slug, p.slug), ' '.repeat(12 - p.slug.length), S(p.title)]).concat([BLANK, S('click a slug, or: open <slug>')]);
-      if (t.startsWith('notebook')) return [[C('cd notebook', 'notebook.log'), S('  14 entries, newest first.')]];
+      if (t.startsWith('notebook')) return [[C('cd notebook', 'notebook.log'), S('  16 entries, newest first. scroll for older.')]];
       return [`ls: cannot access '${t}': no such file or directory`];
     },
 
@@ -1478,6 +1454,8 @@ body::after { right: 12px; transform: scaleX(-1); }
         'Nishanth Antony. AI/ML intern at Kwilo AI, final-year CS at BIT Bengaluru (CGPA 8.50).',
         BLANK,
         'I ship LLM systems that have to be right, not just impressive: a vision-LLM grader that lands within one mark of the teacher about 80% of the time, and the fee ledgers and admission flows around it.',
+        BLANK,
+        'Lately: open-aiops (public PRs for LLM routing and failover) and Dhātrī (Serverpod + Hindi voice care companion).',
         BLANK,
         'I learn by building. Security through 100+ CTFs, backends through Spring Boot, agents through LangGraph, speech through Whisper. Next problem, next lane.',
         BLANK, [C('cd about', '-> read the full about.md')],

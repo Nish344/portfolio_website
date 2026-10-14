@@ -88,11 +88,8 @@
       <p class="item__when">Apr&ndash;May 2026, Jul 2026&ndash;present</p>
     </div>
     <ul>
-      <li>Built a <b>vision-LLM benchmarking pipeline</b> grading scanned handwritten scripts per subpart against teacher marks (4 subjects, 11 test cells; GPT-5.4 Mini, Gemini 3 Flash, 3.1 Pro), with run manifests and auto-generated MAE, &plusmn;1 and QWK reports.</li>
-      <li>Few-shot exemplars cut grading error <b>28% on GPT (MAE 1.259 &rarr; 0.910)</b> and <b>18% on Gemini Flash</b>; within-one-mark agreement rose 68.5% &rarr; 80.1%. Best pipeline: <b>0.855 MAE, zero script failures</b>; it set the production model choice.</li>
-      <li>Shipped <b>answer-sheet auto-mapping</b> (filename match, then Gemini OCR of the roll number) behind a soft-failure contract that never blocks an upload.</li>
-      <li>Built a public <b>blog platform end to end</b>: Postgres models, Alembic migrations, rate-limited FastAPI endpoints, HTML sanitisation, admin editor, prerendered pages.</li>
-      <li>School ERP in FastAPI + React: <b>race-safe fee installment settlement</b> with serialised locks, receipts and due notices, and admissions that confirm before linking parent accounts; Postgres RLS, tests on every change.</li>
+      <li>Built a <b>vision-LLM benchmarking pipeline</b> grading scanned scripts per subpart vs teacher marks (4 subjects, 11 cells). Few-shot cut GPT error <b>28% (MAE 1.259 &rarr; 0.910)</b>; best pipeline <b>0.855 MAE, zero failures</b> &mdash; set the production model.</li>
+      <li>Shipped <b>answer-sheet auto-mapping</b> (filename, then Gemini OCR) that never blocks uploads; public <b>blog platform</b> end to end; school ERP with <b>race-safe fee settlement</b> and admissions that confirm before linking parent accounts (Postgres RLS, tests on every change).</li>
     </ul>
   </div>
 
@@ -132,31 +129,31 @@
 
   <div class="item">
     <div class="item__head">
-      <p class="item__title">Federated IoT Anomaly Detection <span>&middot; research project, IEEE paper in preparation</span></p>
+      <p class="item__title">open-aiops <span>&middot; Intervues Club open source &middot; Apache-2.0</span></p>
+      <p class="item__when"><a href="https://github.com/SupriyankaKharade/open-aiops">github.com/SupriyankaKharade/open-aiops</a></p>
+    </div>
+    <ul>
+      <li>Own <b>governance/</b>: LLM provider router ranked by cost, latency and overload; failover on rate limits and timeouts; retry with exponential backoff and full jitter. Merged public PRs with fake-provider tests (no API keys in CI).</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Dhātrī <span>&middot; Serverpod hackathon &middot; AI care companion</span></p>
+      <p class="item__when"><a href="https://github.com/Nish344/Dhatri">github.com/Nish344/Dhatri</a></p>
+    </div>
+    <ul>
+      <li>Flutter + Serverpod care loop for elders: prescription photo &rarr; Gemini draft &rarr; human confirm &rarr; Future Call reminders &rarr; live caregiver alerts &rarr; Hindi voice check-ins (Sarvam) with <b>pgvector</b> patient memory. AI drafts; humans confirm.</li>
+    </ul>
+  </div>
+
+  <div class="item">
+    <div class="item__head">
+      <p class="item__title">Federated IoT Anomaly Detection <span>&middot; research, IEEE paper in preparation</span></p>
       <p class="item__when">2026</p>
     </div>
     <ul>
-      <li>Dockerised federated clients (cameras, sensors, controllers) detecting spoofing and DDoS without centralising traffic; FedAvg vs FedProx benchmarked, <b>0.98 AUC</b> with FedProx.</li>
-    </ul>
-  </div>
-
-  <div class="item">
-    <div class="item__head">
-      <p class="item__title">Samudra Prahari <span>&middot; Smart India Hackathon 2025 (INCOIS) &middot; AI &amp; Data Engineer</span></p>
-      <p class="item__when">2025</p>
-    </div>
-    <ul>
-      <li>Offline-first coastal hazard reporting (BLE mesh app, social-media scraper, PostGIS dashboard). Built the <b>IndicBERT sentiment pipeline</b> and the <b>image verification module</b> that scores each report's confidence.</li>
-    </ul>
-  </div>
-
-  <div class="item">
-    <div class="item__head">
-      <p class="item__title">Veris Truth Engine <span>&middot; Recurzive V2 hackathon</span></p>
-      <p class="item__when">Sep 2025</p>
-    </div>
-    <ul>
-      <li>LangGraph investigative agent: collector, verifier with per-evidence trust scores, author/mention graph and a refiner loop that decides when to dig deeper; FastAPI service with a Next.js UI.</li>
+      <li>Dockerised federated clients (cameras, sensors, controllers) detecting spoofing and DDoS without centralising traffic; FedAvg vs FedProx, <b>0.98 AUC</b> with FedProx.</li>
     </ul>
   </div>
 </section>
@@ -164,11 +161,11 @@
 <section>
   <h2>Skills</h2>
   <dl class="skills">
-    <dt>AI / ML</dt><dd>vision LLMs, few-shot prompting, eval harnesses, RAG, LangGraph, LangChain, PyTorch, scikit-learn, Whisper / SSL encoders</dd>
+    <dt>AI / ML</dt><dd>vision LLMs, few-shot prompting, eval harnesses, RAG, LangGraph, provider failover / retry, PyTorch, Whisper / SSL, Sarvam STT/TTS</dd>
     <dt>LLM platforms</dt><dd>Gemini (Vertex AI), Azure OpenAI, AWS Bedrock, Claude</dd>
-    <dt>Backend</dt><dd>FastAPI, Flask, Spring Boot, SQLAlchemy async, Alembic, PostgreSQL (RLS, pgvector), pytest</dd>
-    <dt>Frontend / cloud</dt><dd>React, TypeScript, Next.js, React Native; Docker, GCP Cloud Run, AWS EC2/S3, CI/CD</dd>
-    <dt>Languages</dt><dd>Python, Java, TypeScript, SQL, C, Bash &middot; security: OWASP Top 10, Burp Suite, nmap</dd>
+    <dt>Backend</dt><dd>FastAPI, Serverpod, Flask, Spring Boot, SQLAlchemy async, Alembic, PostgreSQL (RLS, pgvector), pytest</dd>
+    <dt>Frontend / cloud</dt><dd>React, TypeScript, Flutter, Next.js, React Native; Docker, GCP Cloud Run, AWS EC2/S3, CI/CD</dd>
+    <dt>Languages</dt><dd>Python, Dart, Java, TypeScript, SQL, C, Bash &middot; security: OWASP Top 10, Burp Suite, nmap</dd>
   </dl>
 </section>
 
