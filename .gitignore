@@ -1,6 +1,9 @@
 # personal source material, never published
 Resources/
 
+# application materials (resumes, cover notes) — keep local
+applications/
+
 .wrangler/
 node_modules/
 .DS_Store

@@ -76,7 +76,7 @@
 
 <p class="summary">
   Final-year CS student and AI/ML intern building LLM systems that have to be <b>measurably right</b>, plus the production backends around them.
-  I pick up whatever stack the problem needs, and I measure before I claim.
+  I pick up whatever stack the problem needs, and I publish the calibration when the demo score was circular.
 </p>
 
 <section>
@@ -119,11 +119,11 @@
 
   <div class="item">
     <div class="item__head">
-      <p class="item__title">PayRecover <span>&middot; Razorpay AI Buildathon 2026</span></p>
-      <p class="item__when"><a href="https://github.com/Nish344/payrecover-agent">github.com/Nish344/payrecover-agent</a></p>
+      <p class="item__title">PayRecover-Jev <span>&middot; failed-payment diagnosis, second build</span></p>
+      <p class="item__when"><a href="https://github.com/Nish344/payrecover-jev">github.com/Nish344/payrecover-jev</a></p>
     </div>
     <ul>
-      <li>Agent that diagnoses failed payments and recovers revenue through bounded actions behind a policy gate, kill switch and audit log (rules first, Gemini for ambiguous cases). Recovered <b>31.27% of failed value</b> (&#8377;44,205 of &#8377;141,353) and <b>76% of recoverable customers</b> on a seeded evaluation batch.</li>
+      <li>v1 put Gemini behind a policy gate and recovered <b>31.3% of failed value</b> on 80 seeded cases. The demo score was circular, so Jev is a typed model on a held-out bench (n=166): <b>ECE 0.059</b> vs Gemini 0.189, zero high-confidence errors on ambiguous cases. Accuracy intervals overlap, so calibration is the published result.</li>
     </ul>
   </div>
 
@@ -149,11 +149,11 @@
 
   <div class="item">
     <div class="item__head">
-      <p class="item__title">Federated IoT Anomaly Detection <span>&middot; research, IEEE paper in preparation</span></p>
-      <p class="item__when">2026</p>
+      <p class="item__title">Paylock <span>&middot; invoice gate, with Nikhil</span></p>
+      <p class="item__when"><a href="https://github.com/Nish344/paylock">github.com/Nish344/paylock</a></p>
     </div>
     <ul>
-      <li>Dockerised federated clients (cameras, sensors, controllers) detecting spoofing and DDoS without centralising traffic; FedAvg vs FedProx, <b>0.98 AUC</b> with FedProx.</li>
+      <li>The model may say PAY. The button pays only if the purchase order and the receiving note agree. <b>8/8</b> expected verdicts on a synthetic bench, including two where Decide said PAY at 100% and the ledger held (one total was $91 high).</li>
     </ul>
   </div>
 </section>
@@ -161,7 +161,7 @@
 <section>
   <h2>Skills</h2>
   <dl class="skills">
-    <dt>AI / ML</dt><dd>vision LLMs, few-shot prompting, eval harnesses, RAG, LangGraph, provider failover / retry, PyTorch, Whisper / SSL, Sarvam STT/TTS</dd>
+    <dt>AI / ML</dt><dd>vision LLMs, few-shot prompting, eval harnesses, calibration, RAG, LangGraph, Jev, Clocked, provider failover / retry, PyTorch, Whisper / SSL, Sarvam STT/TTS</dd>
     <dt>LLM platforms</dt><dd>Gemini (Vertex AI), Azure OpenAI, AWS Bedrock, Claude</dd>
     <dt>Backend</dt><dd>FastAPI, Serverpod, Flask, Spring Boot, SQLAlchemy async, Alembic, PostgreSQL (RLS, pgvector), pytest</dd>
     <dt>Frontend / cloud</dt><dd>React, TypeScript, Flutter, Next.js, React Native; Docker, GCP Cloud Run, AWS EC2/S3, CI/CD</dd>
